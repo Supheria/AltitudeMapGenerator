@@ -93,9 +93,9 @@ public class Program
 
     public static void Main()
     {
-        new VoronoiForm().ShowDialog();
-        //var atlas = new Atlas(1000, 1000, 5, 5, 350000);
-        var atlas = new Atlas(new(200, 200), new(2, 2), new(10, 10), 20000, new RandomPointsGenerationGaussian());
+        //new VoronoiForm().ShowDialog();
+        var atlas = new Atlas(new(1000, 1000), new(5, 5), new(10, 10), 350000, new RandomPointsGenerationGaussian());
+        //var atlas = new Atlas(new(500, 500), new(4, 4), new(10, 10), 120000, new RandomPointsGenerationGaussian());
         atlas.Generate();
         Bitmap image;
         try

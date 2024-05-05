@@ -12,34 +12,31 @@ public class DlaMap(VoronoiCell cell)
 
     Rectangle Bounds { get; set; } = cell.GetBounds();
 
+#if DEBUG
+    public static TestForm TestForm { get; } = new();
+#endif
+
     public DlaPixel[] Generate(int pixelCount)
     {
         PixelMap.Clear();
         (int X, int Y) root = ((int)Cell.Site.X, (int)Cell.Site.Y);
         //var root = Region.Site;
         PixelMap[root] = new(root);
-#if DEBUG
-        var testForm = new TestForm()
-        {
-            Total = pixelCount,
-        };
-        testForm.Show();
-#endif
         bool innerFilter(int x, int y) => Cell.ContainPoint(x, y);
-        for (int i = 0; PixelMap.Count < (int)(pixelCount * 0.2f); i++)
+        for (int i = 0; PixelMap.Count < (int)(pixelCount * 0.5f); i++)
         {
             var pixel = AddWalker(innerFilter);
             PixelMap[(pixel.X, pixel.Y)] = pixel;
-            testForm.Now = PixelMap.Count;
-            testForm.Progress();
+            TestForm.Now++;
+            TestForm.Progress();
         }
         bool outerFilter(int x, int y) => Bounds.Contains(x, y);
         for (int i = 0; PixelMap.Count < pixelCount; i++)
         {
             var pixel = AddWalker(outerFilter);
             PixelMap[(pixel.X, pixel.Y)] = pixel;
-            testForm.Now = PixelMap.Count;
-            testForm.Progress();
+            TestForm.Now++;
+            TestForm.Progress();
         }
         ComputeHeight();
         return PixelMap.Values.ToArray();

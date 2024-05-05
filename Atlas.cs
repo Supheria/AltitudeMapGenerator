@@ -1,5 +1,6 @@
 ﻿using AtlasGenerator.DijkstraShortestPath;
 using AtlasGenerator.DLA;
+using AtlasGenerator.Test;
 using AtlasGenerator.VoronoiDiagram;
 using AtlasGenerator.VoronoiDiagram.Data;
 using LocalUtilities.GraphUtilities;
@@ -57,8 +58,10 @@ public class Atlas(Size size, Size segmentNumber, Size riverSegmentNumber, int p
     {
         GenerateRiver();
         long area = Width * Height;
-        foreach (var cell in new VoronoiPlane(Width, Height).Generate(WidthSegmentNumber, HeightSegmentNumber, PointsGeneration))
-            PixelsMap[cell.Centroid] = new DlaMap(cell).Generate((int)(cell.GetArea() / area * TotalPixelNumber));
+        DlaMap.TestForm.Total = TotalPixelNumber;
+        DlaMap.TestForm.Show();
+        Parallel.ForEach(new VoronoiPlane(Width, Height).Generate(WidthSegmentNumber, HeightSegmentNumber, PointsGeneration),
+            (cell) => PixelsMap[cell.Centroid] = new DlaMap(cell).Generate((int)(cell.GetArea() / area * TotalPixelNumber)));
     }
 
     private void GenerateRiver()

@@ -1,10 +1,14 @@
-﻿namespace AtlasGenerator.Test;
+﻿using System.Net.Sockets;
+using System.Net;
+using System.Text;
+
+namespace AtlasGenerator.Test;
 
 public partial class TestForm : Form
 {
     public float Total { get; set; } = 0;
 
-    public float Now { get; set; } = 0;
+    public float Now {  get; set; } = 0;
 
     public TestForm()
     {
@@ -13,8 +17,22 @@ public partial class TestForm : Form
 
     public void Progress()
     {
-        var percent = Now / Total * 100;
-        this.Text = Math.Round(percent, 2).ToString();
-        Invalidate();
+        Action DoAction = delegate ()
+        {
+            this.Text = $"{Math.Round(Now / Total * 100, 2)}";
+            this.Invalidate();
+        };
+
+        if (this.InvokeRequired)
+        {
+            ControlExtensions.UIThreadBeginInvoke(this, delegate
+            {
+                DoAction();
+            });
+        }
+        else
+        {
+            DoAction();
+        }
     }
 }
