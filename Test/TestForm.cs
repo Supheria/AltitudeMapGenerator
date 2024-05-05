@@ -17,10 +17,9 @@ public partial class TestForm : Form
 
     public void Progress()
     {
-        Action DoAction = delegate ()
+        var DoAction = delegate ()
         {
             this.Text = $"{Math.Round(Now / Total * 100, 2)}";
-            this.Invalidate();
         };
 
         if (this.InvokeRequired)

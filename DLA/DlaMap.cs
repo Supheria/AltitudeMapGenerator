@@ -15,15 +15,20 @@ public class DlaMap(VoronoiCell cell)
 #if DEBUG
     public static TestForm TestForm { get; } = new();
 #endif
-
-    public DlaPixel[] Generate(int pixelCount)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pixelCount"></param>
+    /// <param name="density">[0,1], bigger means that grid-shape is closer to voronoi-cells' shape</param>
+    /// <returns></returns>
+    public DlaPixel[] Generate(int pixelCount, float density)
     {
         PixelMap.Clear();
         (int X, int Y) root = ((int)Cell.Site.X, (int)Cell.Site.Y);
         //var root = Region.Site;
         PixelMap[root] = new(root);
         bool innerFilter(int x, int y) => Cell.ContainPoint(x, y);
-        for (int i = 0; PixelMap.Count < (int)(pixelCount * 0.5f); i++)
+        for (int i = 0; PixelMap.Count < (int)(pixelCount * density); i++)
         {
             var pixel = AddWalker(innerFilter);
             PixelMap[(pixel.X, pixel.Y)] = pixel;

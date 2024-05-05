@@ -54,17 +54,43 @@ public class Atlas(Size size, Size segmentNumber, Size riverSegmentNumber, int p
 
     }
 
-    public void Generate()
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="density">[0,1], bigger means that grid-shape is closer to voronoi-cells' shape</param>
+    public void Generate(float density)
     {
-        GenerateRiver();
+        var cells = new VoronoiPlane(Width, Height).Generate(RiverWidthSegmentNumber, RiverHeightSegmentNumber, PointsGeneration);
+        GenerateRiver(cells);
         long area = Width * Height;
         DlaMap.TestForm.Total = TotalPixelNumber;
         DlaMap.TestForm.Show();
-        Parallel.ForEach(new VoronoiPlane(Width, Height).Generate(WidthSegmentNumber, HeightSegmentNumber, PointsGeneration),
-            (cell) => PixelsMap[cell.Centroid] = new DlaMap(cell).Generate((int)(cell.GetArea() / area * TotalPixelNumber)));
+        Parallel.ForEach(MergeCellsInSameSegment(cells),
+            (cell) => PixelsMap[cell.Centroid] = new DlaMap(cell).Generate((int)(cell.GetArea() / area * TotalPixelNumber), density));
     }
 
-    private void GenerateRiver()
+    private List<VoronoiCell> MergeCellsInSameSegment(List<VoronoiCell> cells)
+    {
+        var unitSegmentWidth = Width / WidthSegmentNumber;
+        var unitSegmentHeight = Height / HeightSegmentNumber;
+        var cellSegmentMap = new Dictionary<(int, int), List<VoronoiCell>>();
+        foreach(var cell in cells)
+        {
+            var key = ((int)cell.Site.X / unitSegmentWidth, (int)cell.Site.Y / unitSegmentHeight);
+            if (cellSegmentMap.TryGetValue(key, out var value))
+                value.Add(cell);
+            else
+                cellSegmentMap[key] = [cell];
+        }
+        foreach(var cellsInSameSegment in cellSegmentMap.Values)
+        {
+            //TODO: merge cells in cellsInSameSegment
+        }
+        //TODO: return merged cells
+        return cells;
+    }
+
+    private void GenerateRiver(List<VoronoiCell> cells)
     {
         RiverOverlayType = Random.Next() % 2;
         if (RiverOverlayType is 0)
@@ -73,7 +99,7 @@ public class Atlas(Size size, Size segmentNumber, Size riverSegmentNumber, int p
             CellMapForRiver.ForEach(m => { m.Clear(); m.Add(Direction.Top, []); m.Add(Direction.Bottom, []); });
         HashSet<Coordinate> nodes = [];
         HashSet<Edge> edges = [];
-        foreach (var cell in new VoronoiPlane(Width, Height).Generate(RiverWidthSegmentNumber, RiverHeightSegmentNumber, PointsGeneration))
+        foreach (var cell in cells)
         {
             if (RiverOverlayType is 0)
             {
@@ -153,9 +179,9 @@ public class Atlas(Size size, Size segmentNumber, Size riverSegmentNumber, int p
     }
 
     [Obsolete("just for test")]
-    public List<Edge> GenerateRiver(bool temp = false)
+    public List<Edge> GenerateRiver()
     {
-        GenerateRiver();
+        GenerateRiver(new VoronoiPlane(Width, Height).Generate(RiverWidthSegmentNumber, RiverHeightSegmentNumber, PointsGeneration));
         return Rivers;
     }
 #endif

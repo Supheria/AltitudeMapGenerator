@@ -93,10 +93,10 @@ public class Program
 
     public static void Main()
     {
-        //new VoronoiForm().ShowDialog();
-        var atlas = new Atlas(new(1000, 1000), new(5, 5), new(10, 10), 350000, new RandomPointsGenerationGaussian());
+        new VoronoiForm().ShowDialog();
+        var atlas = new Atlas(new(1000, 1000), new(5, 5), new(10, 10), 500000, new RandomPointsGenerationGaussian());
         //var atlas = new Atlas(new(500, 500), new(4, 4), new(10, 10), 120000, new RandomPointsGenerationGaussian());
-        atlas.Generate();
+        atlas.Generate(0.66f);
         Bitmap image;
         try
         {
