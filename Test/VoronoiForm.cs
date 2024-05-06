@@ -36,45 +36,34 @@ public partial class VoronoiForm : Form
 
     void SpreadPoints()
     {
-        var atlas = new Atlas(new(1000, 1000), new(WidthSegmentNumber, HeightSegmentNumber), new(5, 5), 0, new RandomPointsGenerationGaussian());
+        var atlas = new Atlas(new(1000, 1000), new(5, 5), RiverLayoutType.Vertical, 10, 0, new RandomPointsGenerationGaussian());
         if (Cells.Count is 0)
             Cells = atlas.GenerateVoronoi();
-        var river = atlas.GenerateRiver();
+        var riverCells = atlas.GenerateRiverVoronoi();
         g.Clear(Color.White);
+        foreach (var c in riverCells)
+            g.DrawPolygon(Pens.Yellow, c.Vertexes.Select(p => new PointF((float)p.X, (float)p.Y)).ToArray());
         DrawVoronoi();
-        foreach (var p in river)
+        foreach (var p in atlas.Rivers)
             g.DrawLine(new Pen(Color.Green, 2f), p.Starter, p.Ender);
         pb.Image = bitmap;
     }
 
     private void DrawVoronoi()
     {
-        var cell = Cells[shit];
-        g.FillEllipse(Brushes.Blue, (float)cell.Site.X - 1.5f, (float)cell.Site.Y - 1.5f, 3, 3);
-        var centroid = cell.Centroid;
-        g.FillEllipse(Brushes.Red, (float)centroid.X - 3f, (float)centroid.Y - 3f, 6, 6);
-        g.FillEllipse(Brushes.Blue, (float)cell.Vertexes[edgeLenth].X - 3f, (float)cell.Vertexes[edgeLenth].Y - 3f, 6, 6);
-        //var next = cell.VerticeNeighbor(cell.Vertices[edgeLenth], true);
-        //g.FillEllipse(Brushes.Violet, (float)next.X - 3f, (float)next.Y - 3f, 6, 6);
-        foreach (var n in cell.Neighbours)
-        {
-            centroid = n.Centroid;
-            g.FillEllipse(Brushes.Red, (float)centroid.X - 3f, (float)centroid.Y - 3f, 6, 6);
-        }
-        //var a = 100;
-        //var ps = new Pen[]
+        //var cell = Cells[shit];
+        //g.FillEllipse(Brushes.Blue, (float)cell.Site.X - 1.5f, (float)cell.Site.Y - 1.5f, 3, 3);
+        //var centroid = cell.Centroid;
+        //foreach (var n in cell.Neighbours)
         //{
-        //    new(Color.FromArgb(a, Color.Cyan)),
-        //    new(Color.FromArgb(a, Color.Gray)),
-        //    new(Color.FromArgb(a, Color.Pink)),
-        //    new(Color.FromArgb(a, Color.Green))
-        //};
-        //int index = 0;
+        //    centroid = n.Centroid;
+        //    g.FillEllipse(Brushes.Red, (float)centroid.X - 3f, (float)centroid.Y - 3f, 6, 6);
+        //}
         foreach (var c in Cells)
-            g.DrawPolygon(Pens.LightGray, c.Vertexes.Select(p => new PointF((float)p.X, (float)p.Y)).ToArray());
-        g.DrawPolygon(Pens.Black, cell.Vertexes.Select(p => new PointF((float)p.X, (float)p.Y)).ToArray());
-        label1.Text = cell.GetArea().ToString() + "\n";
-        label1.Text += (cell.GetArea() / (1000 * 1000) * 100).ToString() + "%";
+            g.DrawPolygon(Pens.Gray, c.Vertexes.Select(p => new PointF((float)p.X, (float)p.Y)).ToArray());
+        //g.DrawPolygon(Pens.Black, cell.Vertexes.Select(p => new PointF((float)p.X, (float)p.Y)).ToArray());
+        //label1.Text = cell.GetArea().ToString() + "\n";
+        //label1.Text += (cell.GetArea() / (1000 * 1000) * 100).ToString() + "%";
     }
 
     void Button1Click(object sender, EventArgs e)

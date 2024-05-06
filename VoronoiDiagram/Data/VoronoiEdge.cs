@@ -1,5 +1,4 @@
-﻿using AtlasGenerator.VoronoiDiagram.Data;
-using LocalUtilities.MathBundle;
+﻿using LocalUtilities.MathBundle;
 
 namespace AtlasGenerator.VoronoiDiagram.Data;
 

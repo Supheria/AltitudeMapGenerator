@@ -1,5 +1,4 @@
-﻿using AtlasGenerator.VoronoiDiagram.Data;
-using LocalUtilities.MathBundle;
+﻿using LocalUtilities.MathBundle;
 
 namespace AtlasGenerator.VoronoiDiagram.Data;
 
@@ -159,7 +158,7 @@ public class VoronoiCell(Coordinate coordinate)
         // When the point lies on top of us, we don't know what to use as an angle because that depends on which way the other edges "close".
         // So we "shift" the center a little towards the (approximate*) centroid of the polygon, which would "restore" the angle.
         // (* We don't want to waste time computing the actual true centroid though.)
-        if (point1.ApproxEqual(Site.X, Site.Y) || point2.ApproxEqual(Site.X, Site.Y))
+        if (point1 == (Site.X, Site.Y) || point2 == (Site.X, Site.Y))
             return SortVerticesClockwisely(point1, point2, GetCenterShiftedX(), GetCenterShiftedY());
         return SortVerticesClockwisely(point1, point2, Site.X, Site.Y);
     }

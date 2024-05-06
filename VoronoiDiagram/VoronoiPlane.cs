@@ -22,16 +22,25 @@ public class VoronoiPlane(int width, int height)
 
     /// <summary>
     /// The generated sites are guaranteed not to lie on the border of the plane (although they may be very close).
+    /// Multi times to use will stack on points last generated 
     /// </summary>
     public List<VoronoiCell> Generate(int widthSegmentNumber, int heightSegmentNumber, IPointsGeneration pointsGeneration)
     {
-        var coordinates = new List<Coordinate>();
         var widthSegment = Width / widthSegmentNumber;
         var heightSegment = Height / heightSegmentNumber;
+        var lastAdd = new Dictionary<(int, int), Coordinate>();
+        foreach (var site in Cells.Select(c => c.Site).ToList())
+        {
+            var key = ((int)(site.X / widthSegment), (int)(site.Y / heightSegment));
+            lastAdd[key] = site;
+        }
+        var coordinates = lastAdd.Values.ToList();
         for (int i = 0; i < widthSegmentNumber; i++)
         {
             for (int j = 0; j < heightSegmentNumber; j++)
             {
+                if (lastAdd.ContainsKey((i, j)))
+                    continue;
                 var (X, Y) = pointsGeneration.Generate(widthSegment * i, heightSegment * j, widthSegment * (i + 1), heightSegment * (j + 1), 1).First();
                 coordinates.Add(new(X, Y));
             }

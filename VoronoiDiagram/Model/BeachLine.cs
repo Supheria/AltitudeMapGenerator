@@ -206,7 +206,7 @@ internal class BeachLine
 
             // If the edge ends up being 0 length (i.e. start and end are the same point),
             // then this is a location with 4+ equidistant sites.
-            if (rightSection.Data.Edge.Starter.ApproxEqual(vertex)) // i.e. what we would set as .End
+            if (rightSection.Data.Edge.Starter == vertex) // i.e. what we would set as .End
             {
                 // Reuse vertex (or we will have 2 ongoing points at the same location)
                 vertex = rightSection.Data.Edge.Starter;

@@ -1,6 +1,4 @@
-﻿using AtlasGenerator.VoronoiDiagram.Data;
-using LocalUtilities.MathBundle;
-using System.Runtime.CompilerServices;
+﻿using LocalUtilities.MathBundle;
 
 namespace AtlasGenerator.VoronoiDiagram.Data;
 
@@ -12,11 +10,9 @@ namespace AtlasGenerator.VoronoiDiagram.Data;
 /// </summary>
 public class VoronoiVertex(double x, double y, Direction borderLocation = Direction.None)
 {
-    public Coordinate Coordinate { get; } = new(x, y);
+    public double X => x;
 
-    public double X => Coordinate.X;
-
-    public double Y => Coordinate.Y;
+    public double Y => y;
 
     /// <summary>
     /// Specifies if this point is on the border of the bounds and where.
@@ -31,9 +27,48 @@ public class VoronoiVertex(double x, double y, Direction borderLocation = Direct
         return Math.Atan2(other.Y - Y, other.X - X);
     }
 
-    public static implicit operator (int X, int Y)(VoronoiVertex point)
+    public static implicit operator Coordinate(VoronoiVertex vertex)
     {
-        return ((int)point.X, (int)point.Y);
+        return new(vertex.X, vertex.Y);
+    }
+
+    public static bool operator ==(VoronoiVertex? v1, object? v2)
+    {
+        if (v1 is null)
+        {
+            if (v2 is null)
+                return true;
+            else
+                return false;
+        }
+        if (v2 is not VoronoiVertex other)
+            return false;
+        return v1.X.ApproxEqual(other.X) && v1.Y.ApproxEqual(other.Y);
+    }
+
+    public static bool operator !=(VoronoiVertex? v1, object? v2)
+    {
+        return !(v1 == v2);
+    }
+
+    public static bool operator ==(VoronoiVertex v, (double X, double Y) p)
+    {
+        return v.X.ApproxEqual(p.X) && v.Y.ApproxEqual(p.Y);
+    }
+
+    public static bool operator !=(VoronoiVertex v, (double X, double Y) p)
+    {
+        return !(v == p);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return this == obj;
     }
 
 #if DEBUG
@@ -61,46 +96,18 @@ public class VoronoiVertex(double x, double y, Direction borderLocation = Direct
 
     private static string BorderLocationToString(Direction location)
     {
-        switch (location)
+        return location switch
         {
-            case Direction.LeftTop:
-                return "LT";
-            case Direction.Left:
-                return "L";
-            case Direction.LeftBottom:
-                return "LB";
-            case Direction.Bottom:
-                return "B";
-            case Direction.BottomRight:
-                return "BR";
-            case Direction.Right:
-                return "R";
-            case Direction.TopRight:
-                return "TR";
-            case Direction.Top:
-                return "T";
-            default:
-                return "";
-        }
+            Direction.LeftTop => "LT",
+            Direction.Left => "L",
+            Direction.LeftBottom => "LB",
+            Direction.Bottom => "B",
+            Direction.BottomRight => "BR",
+            Direction.Right => "R",
+            Direction.TopRight => "TR",
+            Direction.Top => "T",
+            _ => "",
+        };
     }
 #endif
-}
-
-internal static class VPointExtensions
-{
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool ApproxEqual(this VoronoiVertex value1, VoronoiVertex value2)
-    {
-        return
-            value1.X.ApproxEqual(value2.X) &&
-            value1.Y.ApproxEqual(value2.Y);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool ApproxEqual(this VoronoiVertex value1, double x, double y)
-    {
-        return
-            value1.X.ApproxEqual(x) &&
-            value1.Y.ApproxEqual(y);
-    }
 }

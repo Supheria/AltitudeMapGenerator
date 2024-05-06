@@ -79,7 +79,7 @@ internal static class BorderClipping
                 if (outcode == start)
                 {
                     // If we are a 0-length edge after clipping, then we are a "connector" between more than 2 equidistant sites 
-                    if (finalPoint.ApproxEqual(edge.Ender))
+                    if (finalPoint == edge.Ender)
                     {
                         // We didn't consider this point to be on border before, so need reflag it
                         edge.Ender.DirectionOnBorder = finalPoint.DirectionOnBorder;
@@ -98,7 +98,7 @@ internal static class BorderClipping
                 else
                 {
                     // If we are a 0-length edge after clipping, then we are a "connector" between more than 2 equidistant sites 
-                    if (finalPoint.ApproxEqual(edge.Starter))
+                    if (finalPoint == edge.Starter)
                     {
                         // We didn't consider this point to be on border before, so need reflag it
                         edge.Starter.DirectionOnBorder = finalPoint.DirectionOnBorder;
@@ -174,7 +174,7 @@ internal static class BorderClipping
                         new VoronoiVertex(maxX, start.Y, Direction.Right) :
                         new VoronoiVertex(minX, start.Y, start.Y.ApproxEqual(minY) ? Direction.LeftTop : start.Y.ApproxEqual(maxY) ? Direction.LeftBottom : Direction.Left);
                 // If we are a 0-length edge after clipping, then we are a "connector" between more than 2 equidistant sites 
-                if (endPoint.ApproxEqual(edge.Starter))
+                if (endPoint == edge.Starter)
                 {
                     // We didn't consider this point to be on border before, so need reflag it
                     start.DirectionOnBorder = endPoint.DirectionOnBorder;
@@ -219,7 +219,7 @@ internal static class BorderClipping
                         new VoronoiVertex(start.X, maxY, start.X.ApproxEqual(minX) ? Direction.LeftBottom : start.X.ApproxEqual(maxX) ? Direction.BottomRight : Direction.Bottom) :
                         new VoronoiVertex(start.X, minY, Direction.Top);
                 // If we are a 0-length edge after clipping, then we are a "connector" between more than 2 equidistant sites 
-                if (endPoint.ApproxEqual(edge.Starter))
+                if (endPoint == edge.Starter)
                 {
                     // We didn't consider this point to be on border before, so need reflag it
                     start.DirectionOnBorder = endPoint.DirectionOnBorder;
@@ -277,16 +277,16 @@ internal static class BorderClipping
             candidates.Add(topX);
 
         if (withinRightY)
-            if (!withinTopX || !rightY.ApproxEqual(topX))
+            if (!withinTopX || !(rightY == topX))
                 candidates.Add(rightY);
 
         if (withinBottomX)
-            if (!withinRightY || !bottomX.ApproxEqual(rightY))
+            if (!withinRightY || !(bottomX == rightY))
                 candidates.Add(bottomX);
 
         if (withinLeftY)
-            if (!withinTopX || !leftY.ApproxEqual(topX))
-                if (!withinBottomX || !leftY.ApproxEqual(bottomX))
+            if (!withinTopX || !(leftY == topX))
+                if (!withinBottomX || !(leftY == bottomX))
                     candidates.Add(leftY);
 
         // This also works as a condition above, but is slower and checks against redundant values
@@ -317,7 +317,7 @@ internal static class BorderClipping
             {
                 // Candidate 1 is closer
 
-                if (!edge.Starter.ApproxEqual(candidates[1]))
+                if (!(edge.Starter == candidates[1]))
                     edge.Starter = candidates[1];
                 // If the point is already at the right location (i.e. edge.Start == candidates[1]), then keep it.
                 // This preserves the same instance between potential multiple edges.
@@ -333,7 +333,7 @@ internal static class BorderClipping
             {
                 // Candidate 2 is closer
 
-                if (!edge.Starter.ApproxEqual(candidates[0]))
+                if (!(edge.Starter == candidates[0]))
                     edge.Starter = candidates[0];
                 // If the point is already at the right location (i.e. edge.Start == candidates[0]), then keep it.
                 // This preserves the same instance between potential multiple edges.
@@ -351,7 +351,7 @@ internal static class BorderClipping
         if (candidates.Count == 1)
         {
             // If we are already at the candidate point, then we are already on the border at the "clipping" location
-            if (candidates[0].ApproxEqual(edge.Starter))
+            if (candidates[0] == edge.Starter)
             {
                 // We didn't consider this point to be on border before, so need reflag it
                 start.DirectionOnBorder = candidates[0].DirectionOnBorder;

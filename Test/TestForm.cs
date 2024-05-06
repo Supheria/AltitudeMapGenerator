@@ -1,14 +1,10 @@
-﻿using System.Net.Sockets;
-using System.Net;
-using System.Text;
-
-namespace AtlasGenerator.Test;
+﻿namespace AtlasGenerator.Test;
 
 public partial class TestForm : Form
 {
     public float Total { get; set; } = 0;
 
-    public float Now {  get; set; } = 0;
+    public float Now { get; set; } = 0;
 
     public TestForm()
     {
