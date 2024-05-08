@@ -43,7 +43,7 @@ public class VoronoiCell(Coordinate coordinate)
                     // Note that .End is guaranteed to be set since we don't expose edges externally that aren't clipped in bounds
                 }
                 _vertices = vertices.Select(p => new VoronoiVertex(p.Key.X, p.Key.Y, p.Value)).ToList();
-                _vertices.Sort(SortVerticesClockwisely);
+                _vertices.Sort(SortVerticesCounterClockwisely);
             }
             return _vertices;
         }
@@ -128,21 +128,21 @@ public class VoronoiCell(Coordinate coordinate)
     {
         foreach (var v in Vertexes)
         {
-            if (v.X.ApproxEqual(vertice.X) && v.Y.ApproxEqual(vertice.Y))
+            if (v.X.ApproxEqualTo(vertice.X) && v.Y.ApproxEqualTo(vertice.Y))
                 return true;
         }
         return false;
     }
 
-    public VoronoiVertex VerticeClockwiseNext(VoronoiVertex vertice)
+    public VoronoiVertex VertexCounterClockwiseNext(VoronoiVertex vertice)
     {
         var index = 0;
         while (index < Vertexes.Count)
         {
             var v = Vertexes[index];
-            if (v.X.ApproxEqual(vertice.X) && v.Y.ApproxEqual(vertice.Y))
+            if (v.X.ApproxEqualTo(vertice.X) && v.Y.ApproxEqualTo(vertice.Y))
             {
-                index = (index + Vertexes.Count - 1) % Vertexes.Count;
+                index = (index + 1) % Vertexes.Count;
                 return Vertexes[index];
             }
             index++;
@@ -153,24 +153,24 @@ public class VoronoiCell(Coordinate coordinate)
     /// <summary>
     /// If the site lies on any of the edges (or corners), then the starting order is not defined.
     /// </summary>
-    private int SortVerticesClockwisely(VoronoiVertex point1, VoronoiVertex point2)
+    private int SortVerticesCounterClockwisely(VoronoiVertex point1, VoronoiVertex point2)
     {
         // When the point lies on top of us, we don't know what to use as an angle because that depends on which way the other edges "close".
         // So we "shift" the center a little towards the (approximate*) centroid of the polygon, which would "restore" the angle.
         // (* We don't want to waste time computing the actual true centroid though.)
         if (point1 == (Site.X, Site.Y) || point2 == (Site.X, Site.Y))
-            return SortVerticesClockwisely(point1, point2, GetCenterShiftedX(), GetCenterShiftedY());
-        return SortVerticesClockwisely(point1, point2, Site.X, Site.Y);
+            return SortVerticesCounterClockwisely(point1, point2, GetCenterShiftedX(), GetCenterShiftedY());
+        return SortVerticesCounterClockwisely(point1, point2, Site.X, Site.Y);
     }
 
-    private static int SortVerticesClockwisely(VoronoiVertex point1, VoronoiVertex point2, double x, double y)
+    private static int SortVerticesCounterClockwisely(VoronoiVertex point1, VoronoiVertex point2, double x, double y)
     {
         // originally, based on: https://social.msdn.microsoft.com/Forums/en-US/c4c0ce02-bbd0-46e7-aaa0-df85a3408c61/sorting-list-of-xy-coordinates-clockwise-sort-works-if-list-is-unsorted-but-fails-if-list-is?forum=csharplanguage
         // comparer to sort the array based on the points relative position to the center
         var atan1 = Atan2(point1.Y - y, point1.X - x);
         var atan2 = Atan2(point2.Y - y, point2.X - x);
-        if (atan1 > atan2) return 1;
-        if (atan1 < atan2) return -1;
+        if (atan1 > atan2) return -1;
+        if (atan1 < atan2) return 1;
         return 0;
     }
 
@@ -250,7 +250,7 @@ public class VoronoiCell(Coordinate coordinate)
             }
         }
         // If the area is 0, then we are basically squashed on top of other points... weird, but ok, this makes centroid exactly us
-        if (area.ApproxEqual(0))
+        if (area.ApproxEqualTo(0))
             return Site;
         centroidX /= area;
         centroidY /= area;

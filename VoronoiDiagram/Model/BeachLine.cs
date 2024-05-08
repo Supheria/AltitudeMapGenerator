@@ -62,7 +62,7 @@ internal class BeachLine
             }
 
             //the point lies below the left breakpoint
-            if (distanceLeft.ApproxEqual(0))
+            if (distanceLeft.ApproxEqualTo(0))
             {
                 leftSection = node.Previous;
                 rightSection = node;
@@ -70,7 +70,7 @@ internal class BeachLine
             }
 
             //the point lies below the right breakpoint
-            if (distanceRight.ApproxEqual(0))
+            if (distanceRight.ApproxEqualTo(0))
             {
                 leftSection = node;
                 rightSection = node.Next;
@@ -255,8 +255,8 @@ internal class BeachLine
         //look left
         RBTreeNode<BeachSection> prev = section.Previous;
         while (prev.Data.CircleEvent != null &&
-               x.ApproxEqual(prev.Data.CircleEvent.X) &&
-               y.ApproxEqual(prev.Data.CircleEvent.YCenter))
+               x.ApproxEqualTo(prev.Data.CircleEvent.X) &&
+               y.ApproxEqualTo(prev.Data.CircleEvent.YCenter))
         {
             toBeRemoved.Add(prev);
             prev = prev.Previous;
@@ -264,8 +264,8 @@ internal class BeachLine
 
         RBTreeNode<BeachSection> next = section.Next;
         while (next.Data.CircleEvent != null &&
-               x.ApproxEqual(next.Data.CircleEvent.X) &&
-               y.ApproxEqual(next.Data.CircleEvent.YCenter))
+               x.ApproxEqualTo(next.Data.CircleEvent.X) &&
+               y.ApproxEqualTo(next.Data.CircleEvent.YCenter))
         {
             toBeRemoved.Add(next);
             next = next.Next;
@@ -323,14 +323,14 @@ internal class BeachLine
         var leftNode = node.Previous;
         //degenerate parabola
         var site = node.Data.Cell.Site;
-        if ((site.Y - directrix).ApproxEqual(0))
+        if ((site.Y - directrix).ApproxEqualTo(0))
             return site.X;
         //node is the first piece of the beach line
         if (leftNode == null)
             return double.NegativeInfinity;
         //left node is degenerate
         var leftSite = leftNode.Data.Cell.Site;
-        if ((leftSite.Y - directrix).ApproxEqual(0))
+        if ((leftSite.Y - directrix).ApproxEqualTo(0))
             return leftSite.X;
         return ParabolaUtilities.IntersectParabolaX(leftSite.X, leftSite.Y, site.X, site.Y, directrix);
     }
@@ -340,14 +340,14 @@ internal class BeachLine
         var rightNode = node.Next;
         //degenerate parabola
         var site = node.Data.Cell.Site;
-        if ((site.Y - directrix).ApproxEqual(0))
+        if ((site.Y - directrix).ApproxEqualTo(0))
             return site.X;
         //node is the last piece of the beach line
         if (rightNode == null)
             return double.PositiveInfinity;
         //left node is degenerate
         var rightSite = rightNode.Data.Cell.Site;
-        if ((rightSite.Y - directrix).ApproxEqual(0))
+        if ((rightSite.Y - directrix).ApproxEqualTo(0))
             return rightSite.X;
         return ParabolaUtilities.IntersectParabolaX(site.X, site.Y, rightSite.X, rightSite.Y, directrix);
     }

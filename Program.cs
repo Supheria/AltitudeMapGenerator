@@ -1,4 +1,5 @@
 using AtlasGenerator.DLA;
+using AtlasGenerator.Layout;
 using AtlasGenerator.Test;
 using LocalUtilities.GraphUtilities;
 
@@ -94,9 +95,10 @@ public class Program
     public static void Main()
     {
         new VoronoiForm().ShowDialog();
-        var atlas = new Atlas(new(1000, 1000), new(5, 5), RiverLayoutType.Vertical, 10, 500000, new RandomPointsGenerationGaussian());
-        //var atlas = new Atlas(new(500, 500), new(4, 4), new(10, 10), 120000, new RandomPointsGenerationGaussian());
-        atlas.Generate(0.66f);
+        //var atlas = new Atlas(new(1000, 1000), new(5, 5), RiverLayoutType.Vertical, 10, 500000, new RandomPointsGenerationGaussian());
+        //var atlas = new Atlas(new(500, 500), new(4, 4), RiverLayoutType.Horizontal, 10, 120000, new RandomPointsGenerationGaussian());
+        var data = new AtlasData(new(200, 200), new(4, 4), new(4, 6), RiverLayout.Type.Horizontal, 17000, 0.66f, new RandomPointsGenerationGaussian());
+        var atlas = new Atlas(data);
         Bitmap image;
         try
         {

@@ -32,6 +32,11 @@ public class VoronoiVertex(double x, double y, Direction borderLocation = Direct
         return new(vertex.X, vertex.Y);
     }
 
+    public static implicit operator PointF(VoronoiVertex vertex)
+    {
+        return new((float)vertex.X, (float)vertex.Y);
+    }
+
     public static bool operator ==(VoronoiVertex? v1, object? v2)
     {
         if (v1 is null)
@@ -43,7 +48,7 @@ public class VoronoiVertex(double x, double y, Direction borderLocation = Direct
         }
         if (v2 is not VoronoiVertex other)
             return false;
-        return v1.X.ApproxEqual(other.X) && v1.Y.ApproxEqual(other.Y);
+        return v1.X.ApproxEqualTo(other.X) && v1.Y.ApproxEqualTo(other.Y);
     }
 
     public static bool operator !=(VoronoiVertex? v1, object? v2)
@@ -53,7 +58,7 @@ public class VoronoiVertex(double x, double y, Direction borderLocation = Direct
 
     public static bool operator ==(VoronoiVertex v, (double X, double Y) p)
     {
-        return v.X.ApproxEqual(p.X) && v.Y.ApproxEqual(p.Y);
+        return v.X.ApproxEqualTo(p.X) && v.Y.ApproxEqualTo(p.Y);
     }
 
     public static bool operator !=(VoronoiVertex v, (double X, double Y) p)

@@ -10,42 +10,51 @@ namespace AtlasGenerator.VoronoiDiagram;
 /// An Euclidean plane where a Voronoi diagram can be constructed from <see cref="VoronoiCell"/>s
 /// producing a tesselation of cells with <see cref="VoronoiEdge"/> line segments and <see cref="VoronoiVertex"/> vertices.
 /// </summary>
-public class VoronoiPlane(int width, int height)
+public class VoronoiPlane(Size size)
 {
     List<VoronoiCell> Cells { get; set; } = [];
 
     List<VoronoiEdge> Edges { get; set; } = [];
 
-    int Width { get; set; } = width;
+    int Width { get; } = size.Width;
 
-    int Height { get; set; } = height;
+    int Height { get; } = size.Height;
+
+    public List<Coordinate> GenerateSites(Size segmentNumber, IPointsGeneration pointsGeneration)
+    {
+        return GenerateSites(segmentNumber, pointsGeneration, []);
+    }
+
+    public List<Coordinate> GenerateSites(Size segmentNumber, IPointsGeneration pointsGeneration, List<Coordinate> existedSites)
+    {
+        var widthSegment = Width / segmentNumber.Width;
+        var heightSegment = Height / segmentNumber.Height;
+        var excludes = new Dictionary<(int, int), Coordinate>();
+        foreach (var site in existedSites)
+        {
+            var key = ((int)(site.X / widthSegment), (int)(site.Y / heightSegment));
+            excludes[key] = site;
+        }
+        for (int i = 0; i < segmentNumber.Width; i++)
+        {
+            for (int j = 0; j < segmentNumber.Height; j++)
+            {
+                if (excludes.ContainsKey((i, j)))
+                    continue;
+                var (X, Y) = pointsGeneration.Generate(widthSegment * i, heightSegment * j, widthSegment * (i + 1), heightSegment * (j + 1), 1).First();
+                existedSites.Add(new(X, Y));
+            }
+        }
+        return existedSites;
+    }
 
     /// <summary>
     /// The generated sites are guaranteed not to lie on the border of the plane (although they may be very close).
     /// Multi times to use will stack on points last generated 
     /// </summary>
-    public List<VoronoiCell> Generate(int widthSegmentNumber, int heightSegmentNumber, IPointsGeneration pointsGeneration)
+    public List<VoronoiCell> Generate(List<Coordinate> sites)
     {
-        var widthSegment = Width / widthSegmentNumber;
-        var heightSegment = Height / heightSegmentNumber;
-        var lastAdd = new Dictionary<(int, int), Coordinate>();
-        foreach (var site in Cells.Select(c => c.Site).ToList())
-        {
-            var key = ((int)(site.X / widthSegment), (int)(site.Y / heightSegment));
-            lastAdd[key] = site;
-        }
-        var coordinates = lastAdd.Values.ToList();
-        for (int i = 0; i < widthSegmentNumber; i++)
-        {
-            for (int j = 0; j < heightSegmentNumber; j++)
-            {
-                if (lastAdd.ContainsKey((i, j)))
-                    continue;
-                var (X, Y) = pointsGeneration.Generate(widthSegment * i, heightSegment * j, widthSegment * (i + 1), heightSegment * (j + 1), 1).First();
-                coordinates.Add(new(X, Y));
-            }
-        }
-        Cells = UniquePoints(coordinates).Select(c => new VoronoiCell(c)).ToList();
+        Cells = UniquePoints(sites).Select(c => new VoronoiCell(c)).ToList();
         Edges.Clear();
         Generate();
         return Cells;
@@ -55,9 +64,9 @@ public class VoronoiPlane(int width, int height)
     {
         coordinates.Sort((p1, p2) =>
         {
-            if (p1.X.ApproxEqual(p2.X))
+            if (p1.X.ApproxEqualTo(p2.X))
             {
-                if (p1.Y.ApproxEqual(p2.Y))
+                if (p1.Y.ApproxEqualTo(p2.Y))
                     return 0;
                 if (p1.Y < p2.Y)
                     return -1;
@@ -73,8 +82,8 @@ public class VoronoiPlane(int width, int height)
         for (var index = 1; index < coordinates.Count; index++)
         {
             var coordiante = coordinates[index];
-            if (!last.X.ApproxEqual(coordiante.X) ||
-                !last.Y.ApproxEqual(coordiante.Y))
+            if (!last.X.ApproxEqualTo(coordiante.X) ||
+                !last.Y.ApproxEqualTo(coordiante.Y))
             {
                 unique.Add(coordiante);
                 last = coordiante;

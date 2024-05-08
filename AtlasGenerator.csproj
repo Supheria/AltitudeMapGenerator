@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="doc.src\**" />
+    <EmbeddedResource Remove="doc.src\**" />
+    <None Remove="doc.src\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove="doc.md" />
     <None Remove="README.md" />

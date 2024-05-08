@@ -1,4 +1,6 @@
-﻿using AtlasGenerator.VoronoiDiagram.Data;
+﻿using AtlasGenerator.Layout;
+using AtlasGenerator.VoronoiDiagram;
+using AtlasGenerator.VoronoiDiagram.Data;
 using LocalUtilities.GraphUtilities;
 using System.Drawing.Drawing2D;
 
@@ -14,8 +16,7 @@ public partial class VoronoiForm : Form
     static int edgeLenth = 0;
     List<VoronoiCell> Cells = new();
     int shit = 0;
-    int WidthSegmentNumber = 5;
-    int HeightSegmentNumber = 5;
+    Size SegmentNumber = new(5, 5);
 
     public VoronoiForm()
     {
@@ -36,31 +37,34 @@ public partial class VoronoiForm : Form
 
     void SpreadPoints()
     {
-        var atlas = new Atlas(new(1000, 1000), new(5, 5), RiverLayoutType.Vertical, 10, 0, new RandomPointsGenerationGaussian());
+        var size = new Size(1000, 1000);
+        var pointGeneration = new RandomPointsGenerationGaussian();
         if (Cells.Count is 0)
-            Cells = atlas.GenerateVoronoi();
-        var riverCells = atlas.GenerateRiverVoronoi();
+        {
+            var plane = new VoronoiPlane(size);
+            var sites = plane.GenerateSites(SegmentNumber, pointGeneration);
+            Cells = plane.Generate(sites);
+        }
+        var river = new AtlasRiver(size, new(7, 7), RiverLayout.Type.BackwardSlash, pointGeneration, Cells.Select(c => c.Site).ToList());
         g.Clear(Color.White);
-        foreach (var c in riverCells)
-            g.DrawPolygon(Pens.Yellow, c.Vertexes.Select(p => new PointF((float)p.X, (float)p.Y)).ToArray());
-        DrawVoronoi();
-        foreach (var p in atlas.Rivers)
+        foreach (var c in Cells)
+            g.DrawPolygon(Pens.LightGray, c.Vertexes.Select(p => (PointF)p).ToArray());
+        foreach (var p in river.Rivers)
             g.DrawLine(new Pen(Color.Green, 2f), p.Starter, p.Ender);
+        DrawVoronoi();
         pb.Image = bitmap;
     }
 
     private void DrawVoronoi()
     {
-        //var cell = Cells[shit];
-        //g.FillEllipse(Brushes.Blue, (float)cell.Site.X - 1.5f, (float)cell.Site.Y - 1.5f, 3, 3);
-        //var centroid = cell.Centroid;
-        //foreach (var n in cell.Neighbours)
-        //{
-        //    centroid = n.Centroid;
-        //    g.FillEllipse(Brushes.Red, (float)centroid.X - 3f, (float)centroid.Y - 3f, 6, 6);
-        //}
-        foreach (var c in Cells)
-            g.DrawPolygon(Pens.Gray, c.Vertexes.Select(p => new PointF((float)p.X, (float)p.Y)).ToArray());
+        var cell = Cells[shit % Cells.Count];
+        g.DrawPolygon(Pens.Gray, cell.Vertexes.Select(p => (PointF)p).ToArray());
+        g.FillEllipse(Brushes.Red, (float)cell.Site.X - 3f, (float)cell.Site.Y - 3f, 6, 6);
+        var vertex = cell.Vertexes[edgeLenth % cell.Vertexes.Count];
+        g.FillEllipse(Brushes.Blue, (float)vertex.X - 3f, (float)vertex.Y - 3f, 6, 6);
+        var nextVertex = cell.VertexCounterClockwiseNext(vertex);
+        g.DrawLine(new Pen(Color.Red, 2f), vertex, nextVertex);
+
         //g.DrawPolygon(Pens.Black, cell.Vertexes.Select(p => new PointF((float)p.X, (float)p.Y)).ToArray());
         //label1.Text = cell.GetArea().ToString() + "\n";
         //label1.Text += (cell.GetArea() / (1000 * 1000) * 100).ToString() + "%";
@@ -89,8 +93,7 @@ public partial class VoronoiForm : Form
 
     private void NumericUpDown3_ValueChanged(object sender, EventArgs e)
     {
-        WidthSegmentNumber = (int)(numericUpDown3.Value);
-        HeightSegmentNumber = (int)(numericUpDown4.Value);
+        SegmentNumber = new((int)numericUpDown3.Value, (int)numericUpDown4.Value);
         Cells.Clear();
         SpreadPoints();
     }

@@ -8,7 +8,7 @@ internal class BorderNodeComparer : IComparer<BorderNode>
     {
         ArgumentNullException.ThrowIfNull(n1);
         ArgumentNullException.ThrowIfNull(n2);
-        int locationCompare = DirectionOrder(n1.BorderLocation).CompareTo(DirectionOrder(n2.BorderLocation));
+        int locationCompare = n1.BorderLocation.CompareToCounterClockwisely(n2.BorderLocation);
         if (locationCompare != 0)
             return locationCompare;
         return n1.BorderLocation switch // same for n2
@@ -38,24 +38,5 @@ internal class BorderNodeComparer : IComparer<BorderNode>
         if (fallbackComparison != 0)
             return fallbackComparison;
         throw new InvalidOperationException(); // we should never get here if fallback index is proper
-    }
-
-    /// <remarks>
-    /// Note that these are ordered counter-clockwise starting at bottom-left
-    /// </remarks>
-    private static int DirectionOrder(Direction direction)
-    {
-        return direction switch
-        {
-            Direction.LeftTop => 0,
-            Direction.Left => 1,
-            Direction.LeftBottom => 2,
-            Direction.Bottom => 3,
-            Direction.BottomRight => 4,
-            Direction.Right => 5,
-            Direction.TopRight => 6,
-            Direction.Top => 7,
-            _ => throw new InvalidOperationException(),
-        };
     }
 }

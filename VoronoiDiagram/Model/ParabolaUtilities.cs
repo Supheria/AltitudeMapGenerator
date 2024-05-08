@@ -17,7 +17,7 @@ internal class ParabolaUtilities
     {
         //admittedly this is pure voodoo.
         //there is attached documentation for this function
-        return focus1Y.ApproxEqual(focus2Y)
+        return focus1Y.ApproxEqualTo(focus2Y)
             ? (focus1X + focus2X) / 2
             : (focus1X * (directrix - focus2Y) + focus2X * (focus1Y - directrix) +
                Math.Sqrt((directrix - focus1Y) * (directrix - focus2Y) *

@@ -60,7 +60,7 @@ public class VoronoiEdge
         SlopeRun = -(left.Site.Y - right.Site.Y);
         Intercept = null;
 
-        if (SlopeRise.ApproxEqual(0) || SlopeRun.ApproxEqual(0)) return;
+        if (SlopeRise.ApproxEqualTo(0) || SlopeRun.ApproxEqualTo(0)) return;
         Slope = SlopeRise / SlopeRun;
         Intercept = start.Y - Slope * start.X;
     }

@@ -4,107 +4,102 @@ namespace AtlasGenerator.DijkstraShortestPath;
 
 public class Dijkstra
 {
-    static double[,] Graph { get; set; } = new double[0, 0];
+    double[,] Graph { get; }
 
-    /// <summary>
-    /// 所有的边
-    /// </summary>
-    static List<DijkstraEdge> Edges { get; set; } = [];
+    List<DijkstraEdge> Edges { get; }
 
-    /// <summary>
-    /// 所有的点
-    /// </summary>
-    static List<Coordinate> Vertexes { get; set; } = [];
+    List<DijkstraNode> Nodes { get; }
 
-    static List<DijkstraNode> NodeItems { get; set; } = [];
+    public List<Edge>? Path { get; private set; }
 
-    public static void Initialize(List<Edge> edges, List<Coordinate> nodes)
+    public Dijkstra(List<Edge> edges, List<Coordinate> vertexes, Coordinate startVertex, Coordinate finishVertex)
     {
+        if (vertexes.FirstOrDefault(c => c == startVertex) is null ||
+            vertexes.FirstOrDefault(c => c == finishVertex) is null)
+            throw new ArgumentNullException();
         Edges = edges.Select(e => new DijkstraEdge(e)).ToList();
-        Vertexes = nodes;
-        NodeItems = [];
-        Graph = new double[Vertexes.Count, Vertexes.Count];
-        foreach (var row in Enumerable.Range(0, Vertexes.Count))
+        Nodes = [];
+        Graph = new double[vertexes.Count, vertexes.Count];
+        foreach (var row in Enumerable.Range(0, vertexes.Count))
         {
-            var rowNode = Vertexes[row];
-            foreach (var colnum in Enumerable.Range(0, Vertexes.Count))
+            var rowNode = vertexes[row];
+            foreach (var colnum in Enumerable.Range(0, vertexes.Count))
             {
                 if (row == colnum)
                 {
                     Graph[row, colnum] = 0;
                     continue;
                 }
-                var edge = Edges.FirstOrDefault(x => x.Edge.Starter == rowNode && x.Edge.Ender == Vertexes[colnum]);
+                var edge = Edges.FirstOrDefault(x => x.Edge.Starter == rowNode && x.Edge.Ender == vertexes[colnum]);
                 Graph[row, colnum] = edge == null ? double.MaxValue : edge.Weight;
             }
-            NodeItems.Add(new(Vertexes[row], row));
+            Nodes.Add(new(vertexes[row], row));
         }
+        Path = GetPath(startVertex, finishVertex);
     }
 
-    public static List<Edge> GetPath(Coordinate startVertex, Coordinate endVertex)
+    private List<Edge>? GetPath(Coordinate startVertex, Coordinate endVertex)
     {
-        if (Vertexes.FirstOrDefault(c => c == startVertex) is null ||
-            Vertexes.FirstOrDefault(c => c == endVertex) is null)
+        if (Nodes.Count is 0)
             throw new ArgumentNullException();
-        var path = new List<Edge>();
-        if (NodeItems.Count is 0)
-            return path;
-        NodeItems.First(n => n.Node == startVertex).Used = true;
-        NodeItems.ForEach(x =>
+        Nodes.First(n => n.Coordinate == startVertex).Used = true;
+        Nodes.ForEach(x =>
         {
-            x.Weight = GetRowArray(Graph, Vertexes.IndexOf(startVertex))[x.Index];
+            var index = 0;
+            while (index < Nodes.Count)
+            {
+                if (startVertex == Nodes[index].Coordinate)
+                    break;
+                index++;
+            }
+            x.Weight = GetRowArray(index)[x.Index];
             x.Nodes.Add(startVertex);
         });
-        while (NodeItems.Any(x => !x.Used))
+        while (Nodes.Any(x => !x.Used))
         {
             var item = GetUnUsedAndMinNodeItem();
             if (item == null)
                 break;
             item.Used = true;
-            var tempRow = GetRowArray(Graph, item.Index);
-            foreach (var nodeItem in NodeItems)
+            var tempRow = GetRowArray(item.Index);
+            foreach (var nodeItem in Nodes)
             {
                 if (nodeItem.Weight > tempRow[nodeItem.Index] + item.Weight)
                 {
                     nodeItem.Weight = tempRow[nodeItem.Index] + item.Weight;
                     nodeItem.Nodes.Clear();
                     nodeItem.Nodes.AddRange(item.Nodes);
-                    nodeItem.Nodes.Add(item.Node);
+                    nodeItem.Nodes.Add(item.Coordinate);
                 }
             }
         }
-        var desNodeitem = NodeItems.First(x => x.Node == endVertex);
-        if (desNodeitem.Used && desNodeitem.Weight < double.MaxValue)
+        var desNodeitem = Nodes.First(x => x.Coordinate == endVertex);
+        if (!(desNodeitem.Used && desNodeitem.Weight < double.MaxValue))
+            return null;
+        var path = new List<Edge>();
+        foreach (var index in Enumerable.Range(0, desNodeitem.Nodes.Count - 1))
         {
-            foreach (var index in Enumerable.Range(0, desNodeitem.Nodes.Count - 1))
-            {
-                var e = Edges.FirstOrDefault(e => e.Edge.Starter == desNodeitem.Nodes[index] && e.Edge.Ender == desNodeitem.Nodes[index + 1]);
-                if (e is not null)
-                    path.Add(e.Edge);
-            }
-            var edge = Edges.FirstOrDefault(x => x.Edge.Starter == desNodeitem.Nodes.Last() && x.Edge.Ender == endVertex);
-            if (edge is not null)
-                path.Add(edge.Edge);
+            var e = Edges.FirstOrDefault(e => e.Edge.Starter == desNodeitem.Nodes[index] && e.Edge.Ender == desNodeitem.Nodes[index + 1]);
+            if (e is not null)
+                path.Add(e.Edge);
         }
-        NodeItems.ForEach(x =>
-        {
-            x.Used = false;
-            x.Nodes.Clear();
-        });
+        var edge = Edges.FirstOrDefault(x => x.Edge.Starter == desNodeitem.Nodes.Last() && x.Edge.Ender == endVertex);
+        if (edge is not null)
+            path.Add(edge.Edge);
         return path;
     }
 
-    private static DijkstraNode? GetUnUsedAndMinNodeItem()
+    private DijkstraNode? GetUnUsedAndMinNodeItem()
     {
-        return NodeItems.Where(x => !x.Used && x.Weight != double.MaxValue).OrderBy(x => x.Weight).FirstOrDefault();
+        return Nodes.Where(x => !x.Used && x.Weight != double.MaxValue).OrderBy(x => x.Weight).FirstOrDefault();
     }
 
-    private static double[] GetRowArray(double[,] source, int row)
+    private double[] GetRowArray(int row)
     {
-        double[] result = new double[source.GetLength(1)];
+        double[] result = new double[Graph.GetLength(1)];
         foreach (var index in Enumerable.Range(0, result.Length))
         {
-            result[index] = source[row, index];
+            result[index] = Graph[row, index];
         }
         return result;
     }
