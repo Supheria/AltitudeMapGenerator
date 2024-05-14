@@ -10,7 +10,7 @@ public class Atlas : ISsSerializable
 {
     public Dictionary<Coordinate, List<DlaPixel>> PixelsMap { get; private set; } = [];
 
-    public List<Edge> River { get; } = [];
+    public List<Edge> River { get; private set; } = [];
 
     public Rectangle Bounds { get; private set; }
 
@@ -55,8 +55,7 @@ public class Atlas : ISsSerializable
     {
         serializer.WriteTag(nameof(Width), Width.ToString());
         serializer.WriteTag(nameof(Height), Height.ToString());
-        foreach (var river in River)
-            serializer.WriteValue(nameof(River), river, e => [e.Starter.ToIntString(), e.Ender.ToIntString()]);
+        serializer.WriteValueArrays(nameof(River), River, e => e.ToStringArray(true));
         serializer.Serialize(new AtlasBolcks() { Map = PixelsMap });
     }
 
@@ -65,12 +64,7 @@ public class Atlas : ISsSerializable
         var width = deserializer.ReadTag(nameof(Width), s => s.ToInt(Width));
         var height = deserializer.ReadTag(nameof(Height), s => s.ToInt(Height));
         Bounds = new(0, 0, width, height);
-        deserializer.ReadValues(nameof(River), River, list =>
-        {
-            return list.Count is 2 ? new(list[0].ToCoordinate(new()), list[1].ToCoordinate(new())) : null;
-        });
+        River = deserializer.ReadValueArrays(nameof(River), Edge.ParseStringArray);
         PixelsMap = deserializer.Deserialize(new AtlasBolcks()).Map;
-        foreach (var pixels in PixelsMap.Values)
-            DlaMap.RelocatePixels(pixels);
     }
 }

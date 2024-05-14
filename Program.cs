@@ -97,7 +97,7 @@ public class Program
     public static void Main()
     {
         //new VoronoiForm().ShowDialog();
-        //var atlas = new Atlas(new(1000, 1000), new(5, 5), RiverLayoutType.Vertical, 10, 500000, new RandomPointsGenerationGaussian());
+        var data = new AtlasData("testMap", new(1000, 1000), new(5, 5), new(7, 6), RiverLayout.Type.Vertical, 500000, 0.66f, new RandomPointsGenerationGaussian());
         //var data = new AtlasData("testMap", new(500, 500), new(4, 4), new(5, 6), RiverLayout.Type.Horizontal, 120000, 0.66f, new RandomPointsGenerationGaussian());
 
         //var data = new AtlasData("testMap", new(200, 200), new(4, 4), new(4, 6), RiverLayout.Type.Horizontal, 17000, 0.66f, new RandomPointsGenerationGaussian());
@@ -108,7 +108,7 @@ public class Program
         var atlas = new Atlas("testMap").LoadFromSimpleScript();
         stopwatch.Stop();
         var time = stopwatch.ElapsedMilliseconds;
-        atlas.SaveToSimpleScript(false);
+        atlas.SaveToSimpleScript(true);
         Bitmap image;
         try
         {
