@@ -3,8 +3,10 @@ using LocalUtilities.GraphUtilities;
 
 namespace AtlasGenerator;
 
-public class AtlasData(Size size, Size segmentNumber, Size riverSegmentNumber, RiverLayout.Type riverLayoutType, int pixelNumber, float pixelDensity, IPointsGeneration pointsGeneration)
+public class AtlasData(string name, Size size, Size segmentNumber, Size riverSegmentNumber, RiverLayout.Type riverLayoutType, int pixelNumber, float pixelDensity, IPointsGeneration pointsGeneration)
 {
+    public string Name { get; set; } = name;
+
     public Size Size { get; set; } = size;
 
     public long Area => Size.Width * Size.Height;

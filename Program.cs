@@ -2,6 +2,8 @@ using AtlasGenerator.DLA;
 using AtlasGenerator.Layout;
 using AtlasGenerator.Test;
 using LocalUtilities.GraphUtilities;
+using LocalUtilities.SimpleScript.Serialization;
+using System.Diagnostics;
 
 namespace AtlasGenerator;
 
@@ -82,7 +84,7 @@ public class Program
     //    return image;
     //}
 
-    public static int GetHeightMax(DlaPixel[] pixels)
+    public static int GetHeightMax(List<DlaPixel> pixels)
     {
         var heightMax = 0;
         foreach (var pixel in pixels)
@@ -94,11 +96,19 @@ public class Program
 
     public static void Main()
     {
-        new VoronoiForm().ShowDialog();
+        //new VoronoiForm().ShowDialog();
         //var atlas = new Atlas(new(1000, 1000), new(5, 5), RiverLayoutType.Vertical, 10, 500000, new RandomPointsGenerationGaussian());
-        //var atlas = new Atlas(new(500, 500), new(4, 4), RiverLayoutType.Horizontal, 10, 120000, new RandomPointsGenerationGaussian());
-        var data = new AtlasData(new(200, 200), new(4, 4), new(4, 6), RiverLayout.Type.Horizontal, 17000, 0.66f, new RandomPointsGenerationGaussian());
-        var atlas = new Atlas(data);
+        //var data = new AtlasData("testMap", new(500, 500), new(4, 4), new(5, 6), RiverLayout.Type.Horizontal, 120000, 0.66f, new RandomPointsGenerationGaussian());
+
+        //var data = new AtlasData("testMap", new(200, 200), new(4, 4), new(4, 6), RiverLayout.Type.Horizontal, 17000, 0.66f, new RandomPointsGenerationGaussian());
+        //var atlas = new Atlas(data);
+        //atlas.SaveToSimpleScript(false);
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        var atlas = new Atlas("testMap").LoadFromSimpleScript();
+        stopwatch.Stop();
+        var time = stopwatch.ElapsedMilliseconds;
+        atlas.SaveToSimpleScript(false);
         Bitmap image;
         try
         {
@@ -112,7 +122,7 @@ public class Program
         var g = Graphics.FromImage(image);
         g.Clear(Color.Black);
         g.FillRectangle(new SolidBrush(Color.LightYellow), atlas.Bounds);
-        foreach (var r in atlas.Rivers)
+        foreach (var r in atlas.River)
         {
             g.DrawLine(new Pen(Color.LightBlue, 3f), r.Starter, r.Ender);
         }
@@ -148,7 +158,7 @@ public class Program
             }
         }
         pImage.UnlockBits();
-        foreach (var r in atlas.Rivers)
+        foreach (var r in atlas.River)
         {
             g.DrawLine(new Pen(Color.LightBlue, 2f), r.Starter, r.Ender);
         }
@@ -159,7 +169,7 @@ public class Program
         var plain = Math.Round(100 - (mountain + water + forest), 2);
         var totalCount = 0;
         foreach (var pixels in atlas.PixelsMap.Values)
-            totalCount += pixels.Length;
+            totalCount += pixels.Count;
         g.DrawString($"\n\n\n生成数 {totalCount}\n\n范围 {atlas.Bounds}\n\n山地{mountain}% 平原{plain}%\n河水{water}% 树林{forest}%",
             new("仿宋", 15, FontStyle.Bold, GraphicsUnit.Pixel), new SolidBrush(Color.White), new RectangleF(0, image.Height - 200, image.Width, 200));
         //g.DrawPolygon(Pens.Black, bigMap.Region.CellVertices.Select(p=>new PointF((float)p.X, (float)p.Y)).ToArray());

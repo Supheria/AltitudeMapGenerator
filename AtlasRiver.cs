@@ -25,7 +25,7 @@ internal class AtlasRiver
 
     HashSet<Edge> Edges { get; set; } = [];
 
-    internal HashSet<Edge> Rivers { get; private set; } = [];
+    internal HashSet<Edge> River { get; private set; } = [];
 
     internal bool Successful { get; private set; } = true;
 
@@ -80,7 +80,7 @@ internal class AtlasRiver
         var startNodes = BorderNodeMap[(riverIndex, NodeTowards.Start)].ToList();
         var finishNodes = BorderNodeMap[(riverIndex, NodeTowards.Finish)].ToList();
         List<Edge>? river = null;
-        var existed = Rivers.ToHashSet();
+        var existed = River.ToHashSet();
         var startVisited = new HashSet<Coordinate>();
         var finishVisited = new HashSet<Coordinate>();
         do
@@ -96,7 +96,7 @@ internal class AtlasRiver
             river = new Dijkstra(Edges.ToList(), nodes, start, finish).Path;
         } while (river is null || river.FirstOrDefault(existed.Contains) is not null);
         if (river is not null && river.FirstOrDefault(existed.Contains) is null)
-            river.ForEach(e => Rivers.Add(e));
+            river.ForEach(e => River.Add(e));
         else
             Successful = false;
     }

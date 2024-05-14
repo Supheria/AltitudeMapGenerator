@@ -21,7 +21,7 @@ public class DlaMap(VoronoiCell cell)
     /// <param name="pixelCount"></param>
     /// <param name="density">[0,1], bigger means that grid-shape is closer to voronoi-cells' shape</param>
     /// <returns></returns>
-    public DlaPixel[] Generate(int pixelCount, float density)
+    public List<DlaPixel> Generate(int pixelCount, float density)
     {
         PixelMap.Clear();
         (int X, int Y) root = ((int)Cell.Site.X, (int)Cell.Site.Y);
@@ -44,7 +44,7 @@ public class DlaMap(VoronoiCell cell)
             TestForm.Progress();
         }
         ComputeHeight();
-        return PixelMap.Values.ToArray();
+        return PixelMap.Values.ToList();
     }
 
     private DlaPixel AddWalker(Func<int, int, bool> pixelFilter)
@@ -193,7 +193,7 @@ public class DlaMap(VoronoiCell cell)
         return walker.ConnetNumber[direction];
     }
 
-    public static Dictionary<(int X, int Y), DlaPixel> RelocatePixels(ICollection<DlaPixel> pixels)
+    public static Dictionary<(int X, int Y), DlaPixel> RelocatePixels(IList<DlaPixel> pixels)
     {
         var pixelMap = new Dictionary<(int X, int Y), DlaPixel>();
         foreach (var pixel in pixels)

@@ -49,7 +49,7 @@ public partial class VoronoiForm : Form
         g.Clear(Color.White);
         foreach (var c in Cells)
             g.DrawPolygon(Pens.LightGray, c.Vertexes.Select(p => (PointF)p).ToArray());
-        foreach (var p in river.Rivers)
+        foreach (var p in river.River)
             g.DrawLine(new Pen(Color.Green, 2f), p.Starter, p.Ender);
         DrawVoronoi();
         pb.Image = bitmap;
