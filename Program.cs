@@ -97,18 +97,19 @@ public class Program
     public static void Main()
     {
         //new VoronoiForm().ShowDialog();
-        var data = new AtlasData("testMap", new(1000, 1000), new(5, 5), new(7, 6), RiverLayout.Type.Vertical, 500000, 0.66f, new RandomPointsGenerationGaussian());
+        //var data = new AtlasData("testMap", new(1000, 1000), new(5, 5), new(7, 6), RiverLayout.Type.Vertical, 500000, 0.66f, new RandomPointsGenerationGaussian());
         //var data = new AtlasData("testMap", new(500, 500), new(4, 4), new(5, 6), RiverLayout.Type.Horizontal, 120000, 0.66f, new RandomPointsGenerationGaussian());
 
-        //var data = new AtlasData("testMap", new(200, 200), new(4, 4), new(4, 6), RiverLayout.Type.Horizontal, 17000, 0.66f, new RandomPointsGenerationGaussian());
+        var data = new AtlasData("testMap", new(200, 200), new(4, 4), new(4, 6), RiverLayout.Type.Horizontal, 17000, 0.66f, new RandomPointsGenerationGaussian());
         //var atlas = new Atlas(data);
-        //atlas.SaveToSimpleScript(false);
+        //atlas.SaveToSimpleScript(true);
         var stopwatch = new Stopwatch();
         stopwatch.Start();
         var atlas = new Atlas("testMap").LoadFromSimpleScript();
         stopwatch.Stop();
         var time = stopwatch.ElapsedMilliseconds;
-        atlas.SaveToSimpleScript(true);
+        atlas.SaveToSimpleScript(false);
+        MessageBox.Show(time.ToString());
         Bitmap image;
         try
         {

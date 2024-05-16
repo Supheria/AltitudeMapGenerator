@@ -55,8 +55,8 @@ public class Atlas : ISsSerializable
     {
         serializer.WriteTag(nameof(Width), Width.ToString());
         serializer.WriteTag(nameof(Height), Height.ToString());
-        serializer.WriteValueArrays(nameof(River), River, e => e.ToStringArray(true));
-        serializer.Serialize(new AtlasBolcks() { Map = PixelsMap });
+        serializer.WriteValuesArray(nameof(River), River, e => e.ToIntStringArray());
+        serializer.WriteObject(new AtlasBolcks() { Map = PixelsMap });
     }
 
     public void Deserialize(SsDeserializer deserializer)
@@ -64,7 +64,7 @@ public class Atlas : ISsSerializable
         var width = deserializer.ReadTag(nameof(Width), s => s.ToInt(Width));
         var height = deserializer.ReadTag(nameof(Height), s => s.ToInt(Height));
         Bounds = new(0, 0, width, height);
-        River = deserializer.ReadValueArrays(nameof(River), Edge.ParseStringArray);
-        PixelsMap = deserializer.Deserialize(new AtlasBolcks()).Map;
+        River = deserializer.ReadValuesArray(nameof(River), Edge.ParseStringArray);
+        PixelsMap = deserializer.ReadObject(new AtlasBolcks()).Map;
     }
 }

@@ -9,23 +9,26 @@ using System.Threading.Tasks;
 
 namespace AtlasGenerator;
 
-public class AtlasBolcks : SerializableTagValues<Coordinate, DlaPixel>
+public class AtlasBolcks : SerializableTagValues<Coordinate, List<DlaPixel>>
 {
-    public override string LocalName { get; set; } = nameof(AtlasBolcks);
+    public override string LocalName { get; set; } = "BlockSite";
 
-    public override string KeyName { get; set; } = "Site";
+    protected override Func<Coordinate, string> WriteTag => c => c.ToIntString();
 
-    protected override Func<Coordinate, string> WriteKey => c => c.ToIntString();
+    protected override Func<List<DlaPixel>, List<string>> WriteValue => p => p.Select(p => StringTypeConverter.ToArrayString(p.X, p.Y, p.Height)).ToList();
 
-    protected override Func<DlaPixel, string> WriteValue => p => StringTypeConverter.ToArrayString(p.X, p.Y, p.Height);
+    protected override Func<string, Coordinate> ReadTag => s => s.ToCoordinate(new());
 
-    protected override Func<string, Coordinate> ReadKey => s => s.ToCoordinate(new());
-
-    protected override Func<string, DlaPixel> ReadValue => s =>
+    protected override Func<List<string>, List<DlaPixel>> ReadValue => list =>
     {
-        var list = s.ToArray();
-        if (list.Length is not 3)
-            return new();
-        return new(list[0].ToInt(0), list[1].ToInt(0)) { Height = list[2].ToInt(0) };
+        var pixels = new List<DlaPixel>();
+        foreach(var item in list)
+        {
+            var arr = item.ToArray();
+            if (arr.Length is not 3)
+                continue;
+            pixels.Add(new(arr[0].ToInt(0), arr[1].ToInt(0)) { Height = arr[2].ToInt(0) });
+        }
+        return pixels;
     };
 }
