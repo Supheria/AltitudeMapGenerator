@@ -1,11 +1,6 @@
 ﻿using AtlasGenerator.DLA;
 using LocalUtilities.MathBundle;
 using LocalUtilities.TypeBundle;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AtlasGenerator;
 
@@ -22,7 +17,7 @@ public class AtlasBolcks : SerializableTagValues<Coordinate, List<DlaPixel>>
     protected override Func<List<string>, List<DlaPixel>> ReadValue => list =>
     {
         var pixels = new List<DlaPixel>();
-        foreach(var item in list)
+        foreach (var item in list)
         {
             var arr = item.ToArray();
             if (arr.Length is not 3)

@@ -54,7 +54,7 @@ public class DlaPixel((int X, int Y) point)
 
     }
 
-    public DlaPixel(int x, int y) : this((x, y)) 
+    public DlaPixel(int x, int y) : this((x, y))
     {
 
     }

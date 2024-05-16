@@ -12,9 +12,9 @@ public class DlaMap(VoronoiCell cell)
 
     Rectangle Bounds { get; set; } = cell.GetBounds();
 
-//#if DEBUG
+    //#if DEBUG
     public static TestForm TestForm { get; } = new();
-//#endif
+    //#endif
     /// <summary>
     /// 
     /// </summary>
