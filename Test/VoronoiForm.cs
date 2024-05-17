@@ -1,7 +1,6 @@
 ﻿using AtlasGenerator.Layout;
 using AtlasGenerator.VoronoiDiagram;
 using AtlasGenerator.VoronoiDiagram.Data;
-using LocalUtilities.GraphUtilities;
 using System.Drawing.Drawing2D;
 
 namespace AtlasGenerator.Test;

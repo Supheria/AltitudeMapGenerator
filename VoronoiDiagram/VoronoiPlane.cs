@@ -1,8 +1,8 @@
 ﻿using AtlasGenerator.VoronoiDiagram.BorderDisposal;
 using AtlasGenerator.VoronoiDiagram.Data;
 using AtlasGenerator.VoronoiDiagram.Model;
-using LocalUtilities.GraphUtilities;
-using LocalUtilities.MathBundle;
+using LocalUtilities.TypeGeneral;
+using LocalUtilities.TypeToolKit.Math;
 
 namespace AtlasGenerator.VoronoiDiagram;
 

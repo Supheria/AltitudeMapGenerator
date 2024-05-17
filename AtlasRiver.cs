@@ -2,8 +2,7 @@
 using AtlasGenerator.Layout;
 using AtlasGenerator.VoronoiDiagram;
 using AtlasGenerator.VoronoiDiagram.Data;
-using LocalUtilities.GraphUtilities;
-using LocalUtilities.MathBundle;
+using LocalUtilities.TypeGeneral;
 
 namespace AtlasGenerator;
 

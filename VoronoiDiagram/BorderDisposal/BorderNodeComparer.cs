@@ -1,4 +1,5 @@
-﻿using LocalUtilities.MathBundle;
+﻿using LocalUtilities.TypeGeneral;
+using LocalUtilities.TypeToolKit.Math;
 
 namespace AtlasGenerator.VoronoiDiagram.BorderDisposal;
 

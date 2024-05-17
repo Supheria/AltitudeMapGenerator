@@ -1,8 +1,7 @@
 ﻿using AtlasGenerator.DLA;
 using AtlasGenerator.VoronoiDiagram;
-using LocalUtilities.MathBundle;
 using LocalUtilities.SimpleScript.Serialization;
-using LocalUtilities.TypeBundle;
+using LocalUtilities.TypeGeneral;
 
 namespace AtlasGenerator;
 
@@ -61,8 +60,8 @@ public class Atlas : ISsSerializable
 
     public void Deserialize(SsDeserializer deserializer)
     {
-        var width = deserializer.ReadTag(nameof(Width), s => s.ToInt(Width));
-        var height = deserializer.ReadTag(nameof(Height), s => s.ToInt(Height));
+        var width = deserializer.ReadTag(nameof(Width), int.Parse);
+        var height = deserializer.ReadTag(nameof(Height), int.Parse);
         Bounds = new(0, 0, width, height);
         River = deserializer.ReadValuesArray(nameof(River), Edge.ParseStringArray);
         PixelsMap = deserializer.ReadObject(new AtlasBolcks()).Map;

@@ -1,5 +1,4 @@
 ﻿using AtlasGenerator.Layout;
-using LocalUtilities.GraphUtilities;
 
 namespace AtlasGenerator;
 

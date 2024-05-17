@@ -1,4 +1,4 @@
-﻿using LocalUtilities.MathBundle;
+﻿using LocalUtilities.TypeGeneral;
 
 namespace AtlasGenerator.Layout;
 

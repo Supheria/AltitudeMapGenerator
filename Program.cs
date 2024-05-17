@@ -1,7 +1,7 @@
 using AtlasGenerator.DLA;
 using AtlasGenerator.Layout;
-using LocalUtilities.GraphUtilities;
 using LocalUtilities.SimpleScript.Serialization;
+using LocalUtilities.TypeGeneral;
 using System.Diagnostics;
 
 namespace AtlasGenerator;

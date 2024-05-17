@@ -1,6 +1,6 @@
 using AtlasGenerator.Test;
 using AtlasGenerator.VoronoiDiagram.Data;
-using LocalUtilities.MathBundle;
+using LocalUtilities.TypeGeneral;
 
 namespace AtlasGenerator.DLA;
 

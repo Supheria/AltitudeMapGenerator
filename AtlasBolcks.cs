@@ -1,6 +1,6 @@
 ﻿using AtlasGenerator.DLA;
-using LocalUtilities.MathBundle;
-using LocalUtilities.TypeBundle;
+using LocalUtilities.TypeGeneral;
+using LocalUtilities.TypeToolKit.Convert;
 
 namespace AtlasGenerator;
 
@@ -10,9 +10,9 @@ public class AtlasBolcks : SerializableTagValues<Coordinate, List<DlaPixel>>
 
     protected override Func<Coordinate, string> WriteTag => c => c.ToIntString();
 
-    protected override Func<List<DlaPixel>, List<string>> WriteValue => p => p.Select(p => StringTypeConverter.ToArrayString(p.X, p.Y, p.Height)).ToList();
+    protected override Func<List<DlaPixel>, List<string>> WriteValue => p => p.Select(p => StringArray.ToArrayString(p.X, p.Y, p.Height)).ToList();
 
-    protected override Func<string, Coordinate> ReadTag => s => s.ToCoordinate(new());
+    protected override Func<string, Coordinate> ReadTag => Coordinate.Parse;
 
     protected override Func<List<string>, List<DlaPixel>> ReadValue => list =>
     {
@@ -22,7 +22,7 @@ public class AtlasBolcks : SerializableTagValues<Coordinate, List<DlaPixel>>
             var arr = item.ToArray();
             if (arr.Length is not 3)
                 continue;
-            pixels.Add(new(arr[0].ToInt(0), arr[1].ToInt(0)) { Height = arr[2].ToInt(0) });
+            pixels.Add(new(int.Parse(arr[0]), int.Parse(arr[1])) { Height = int.Parse(arr[2]) });
         }
         return pixels;
     };
