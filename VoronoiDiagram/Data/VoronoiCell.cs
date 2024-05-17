@@ -1,4 +1,5 @@
-﻿using LocalUtilities.TypeGeneral;
+﻿using AtlasGenerator.Common;
+using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Math;
 
 namespace AtlasGenerator.VoronoiDiagram.Data;
@@ -9,9 +10,9 @@ namespace AtlasGenerator.VoronoiDiagram.Data;
 /// This has <see cref="Vertexes"/> of <see cref="VoronoiVertex"/>s that are the edge end points, i.e. the cell's vertices.
 /// This also has <see cref="Neighbours"/>, i.e. <see cref="VoronoiCell"/>s across the <see cref="VoronoiEdge"/>s.
 /// </summary>
-public class VoronoiCell(Coordinate coordinate)
+internal class VoronoiCell(CoordinateD coordinate)
 {
-    public Coordinate Site { get; private set; } = coordinate;
+    internal CoordinateD Site { get; private set; } = coordinate;
 
     /// <summary>
     /// The edges that make up this cell.
@@ -23,12 +24,12 @@ public class VoronoiCell(Coordinate coordinate)
     /// <summary>
     /// The sites across the edges.
     /// </summary>
-    public List<VoronoiCell> Neighbours { get; } = [];
+    internal List<VoronoiCell> Neighbours { get; } = [];
 
     /// <summary>
     /// The vertices of the <see cref="Edges"/>.
     /// </summary>
-    public List<VoronoiVertex> Vertexes
+    internal List<VoronoiVertex> Vertexes
     {
         get
         {
@@ -51,13 +52,13 @@ public class VoronoiCell(Coordinate coordinate)
     }
     List<VoronoiVertex>? _vertices = null;
 
-    public Coordinate Centroid
+    internal CoordinateD Centroid
     {
         get => _centroid ??= GetCentroid();
     }
-    Coordinate? _centroid = null;
+    CoordinateD? _centroid = null;
 
-    public Direction DirectionOnBorder
+    internal Direction DirectionOnBorder
     {
         get
         {
@@ -99,12 +100,12 @@ public class VoronoiCell(Coordinate coordinate)
     }
     Direction? _directionOnBorder = null;
 
-    public VoronoiCell() : this(new())
+    internal VoronoiCell() : this(new())
     {
 
     }
 
-    public bool ContainPoint(double x, double y)
+    internal bool ContainPoint(double x, double y)
     {
         // helper method to determine if a point is inside the cell
         // based on meowNET's answer from: https://stackoverflow.com/questions/4243042/c-sharp-point-in-polygon
@@ -125,7 +126,7 @@ public class VoronoiCell(Coordinate coordinate)
         return result;
     }
 
-    public bool ContainVertice(VoronoiVertex vertice)
+    internal bool ContainVertice(VoronoiVertex vertice)
     {
         foreach (var v in Vertexes)
         {
@@ -135,7 +136,7 @@ public class VoronoiCell(Coordinate coordinate)
         return false;
     }
 
-    public VoronoiVertex VertexCounterClockwiseNext(VoronoiVertex vertice)
+    internal VoronoiVertex VertexCounterClockwiseNext(VoronoiVertex vertice)
     {
         var index = 0;
         while (index < Vertexes.Count)
@@ -211,7 +212,7 @@ public class VoronoiCell(Coordinate coordinate)
     /// This is assuming a non-self-intersecting closed polygon of our cell.
     /// If we don't have a closed cell (i.e. unclosed "polygon"), then this will produce approximate results that aren't mathematically sound, but work for most purposes. 
     /// </summary>
-    private Coordinate GetCentroid()
+    private CoordinateD GetCentroid()
     {
         // Basically, https://stackoverflow.com/a/34732659
         // https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
@@ -258,7 +259,7 @@ public class VoronoiCell(Coordinate coordinate)
         return new(centroidX, centroidY);
     }
 
-    public Rectangle GetBounds()
+    internal Rectangle GetBounds()
     {
         if (Vertexes.Count is 0)
             return new(0, 0, 0, 0);
@@ -276,7 +277,7 @@ public class VoronoiCell(Coordinate coordinate)
         return new((int)left, (int)top, (int)(right - left), (int)(bottom - top));
     }
 
-    public double GetArea()
+    internal double GetArea()
     {
         var count = Vertexes.Count;
         if (count < 3)
@@ -286,11 +287,4 @@ public class VoronoiCell(Coordinate coordinate)
             s += Vertexes[i].Y * (Vertexes[i - 1].X - Vertexes[(i + 1) % count].X);
         return Math.Abs(s / 2d);
     }
-
-#if DEBUG
-    public override string ToString()
-    {
-        return $"{Centroid.X:F3}, {Centroid.Y:F3}";
-    }
-#endif
 }

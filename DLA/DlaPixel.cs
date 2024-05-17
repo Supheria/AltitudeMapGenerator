@@ -2,21 +2,23 @@ using LocalUtilities.TypeGeneral;
 
 namespace AtlasGenerator.DLA;
 
-public class DlaPixel((int X, int Y) point)
+internal class DlaPixel(int x, int y)
 {
-    public int X => point.X;
+    public Coordinate Coordinate => new(X, Y);
 
-    public int Y => point.Y;
+    internal int X => x;
 
-    public Dictionary<Direction, (int X, int Y)> Neighbor { get; } = new();
+    internal int Y => y;
 
-    public Dictionary<Direction, int> ConnetNumber { get; } = new();
+    internal Dictionary<Direction, Coordinate> Neighbor { get; } = [];
 
-    public int Height
+    internal Dictionary<Direction, int> ConnetNumber { get; } = [];
+
+    internal double Altitude
     {
         get
         {
-            if (_height is -1)
+            if (_altitude is -1)
             {
                 if (!ConnetNumber.TryGetValue(Direction.Top, out var top))
                     top = 0;
@@ -34,7 +36,7 @@ public class DlaPixel((int X, int Y) point)
                     topRight = 0;
                 if (!ConnetNumber.TryGetValue(Direction.LeftBottom, out var leftBottom))
                     leftBottom = 0;
-                _height = Math.Max(
+                _altitude = Math.Max(
                     Math.Max(
                         top + bottom - Math.Abs(top - bottom),
                         left + right - Math.Abs(left - right)),
@@ -43,20 +45,14 @@ public class DlaPixel((int X, int Y) point)
                         topRight + leftBottom - Math.Abs(topRight - leftBottom))
                     );
             }
-            return _height;
+            return _altitude;
         }
-        set => _height = value;
+        set => _altitude = value;
     }
-    int _height = -1;
+    double _altitude = -1;
 
-    public DlaPixel() : this((0, 0))
-    {
-
-    }
-
-    public DlaPixel(int x, int y) : this((x, y))
+    internal DlaPixel() : this(0, 0)
     {
 
     }
 }
-

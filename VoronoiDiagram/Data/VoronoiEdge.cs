@@ -9,29 +9,29 @@ namespace AtlasGenerator.VoronoiDiagram.Data;
 /// This has the two <see cref="VoronoiCell"/>s they separate, i.e. <see cref="Right"/> and <see cref="Left"/>.
 /// This connects in a <see cref="Neighbours"/> node graph to other <see cref="VoronoiEdge"/>s, i.e. shares end points with them.
 /// </summary>
-public class VoronoiEdge
+internal class VoronoiEdge
 {
     /// <summary>
     /// One of the two points making up this line segment, the other being <see cref="Ender"/>.
     /// </summary>
-    public VoronoiVertex Starter { get; internal set; }
+    internal VoronoiVertex Starter { get; set; }
 
     /// <summary>
     /// One of the two points making up this line segment, the other being <see cref="Starter"/>.
     /// </summary>
-    public VoronoiVertex? Ender { get; internal set; } = null;
+    internal VoronoiVertex? Ender { get; set; } = null;
 
     /// <summary>
     /// One of the two sites that this edge separates, the other being <see cref="Left"/>.
     /// Can be null if this is a border edge and there are no sites within the bounds.
     /// </summary>
-    public VoronoiCell? Right { get; } = null;
+    internal VoronoiCell? Right { get; } = null;
 
     /// <summary>
     /// One of the two sites that this edge separates, the other being <see cref="Right"/>.
     /// Can be null if this is a border edge.
     ///  </summary>
-    public VoronoiCell? Left { get; } = null;
+    internal VoronoiCell? Left { get; } = null;
 
     internal double SlopeRise { get; }
 
@@ -48,18 +48,9 @@ public class VoronoiEdge
         Starter = start;
         Left = left;
         Right = right;
-
-        // Suspending this check because this never happens
-        // //for bounding box edges
-        // if (left == null || right == null)
-        //     return;
-
-        //from negative reciprocal of slope of line from left to right
-        //ala m = (left.y -right.y / left.x - right.x)
         SlopeRise = left.Site.X - right.Site.X;
         SlopeRun = -(left.Site.Y - right.Site.Y);
         Intercept = null;
-
         if (SlopeRise.ApproxEqualTo(0) || SlopeRun.ApproxEqualTo(0)) return;
         Slope = SlopeRise / SlopeRun;
         Intercept = start.Y - Slope * start.X;
@@ -70,7 +61,6 @@ public class VoronoiEdge
         Starter = start;
         Ender = end;
         Right = right;
-
         // Don't bother with slope stuff if we are given explicit coords
     }
     /// <summary>
@@ -92,17 +82,4 @@ public class VoronoiEdge
         var yd = Ender.Y - Starter.Y;
         return Math.Sqrt(xd * xd + yd * yd);
     }
-
-
-#if DEBUG
-    public override string ToString()
-    {
-        return (Starter?.ToString() ?? "NONE") + "->" + (Ender?.ToString() ?? "NONE");
-    }
-
-    public string ToString(string format)
-    {
-        return (Starter?.ToString(format) ?? "NONE") + "->" + (Ender?.ToString(format) ?? "NONE");
-    }
-#endif
 }

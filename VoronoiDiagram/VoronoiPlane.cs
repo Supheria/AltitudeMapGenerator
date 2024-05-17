@@ -1,7 +1,7 @@
-﻿using AtlasGenerator.VoronoiDiagram.BorderDisposal;
+﻿using AtlasGenerator.Common;
+using AtlasGenerator.VoronoiDiagram.BorderDisposal;
 using AtlasGenerator.VoronoiDiagram.Data;
 using AtlasGenerator.VoronoiDiagram.Model;
-using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Math;
 
 namespace AtlasGenerator.VoronoiDiagram;
@@ -10,7 +10,7 @@ namespace AtlasGenerator.VoronoiDiagram;
 /// An Euclidean plane where a Voronoi diagram can be constructed from <see cref="VoronoiCell"/>s
 /// producing a tesselation of cells with <see cref="VoronoiEdge"/> line segments and <see cref="VoronoiVertex"/> vertices.
 /// </summary>
-public class VoronoiPlane(Size size)
+internal class VoronoiPlane(Size size)
 {
     List<VoronoiCell> Cells { get; set; } = [];
 
@@ -20,16 +20,16 @@ public class VoronoiPlane(Size size)
 
     int Height { get; } = size.Height;
 
-    public List<Coordinate> GenerateSites(Size segmentNumber, IPointsGeneration pointsGeneration)
+    internal List<CoordinateD> GenerateSites(Size segmentNumber, IPointsGeneration pointsGeneration)
     {
         return GenerateSites(segmentNumber, pointsGeneration, []);
     }
 
-    public List<Coordinate> GenerateSites(Size segmentNumber, IPointsGeneration pointsGeneration, List<Coordinate> existedSites)
+    internal List<CoordinateD> GenerateSites(Size segmentNumber, IPointsGeneration pointsGeneration, List<CoordinateD> existedSites)
     {
         var widthSegment = Width / segmentNumber.Width;
         var heightSegment = Height / segmentNumber.Height;
-        var excludes = new Dictionary<(int, int), Coordinate>();
+        var excludes = new Dictionary<(int, int), CoordinateD>();
         foreach (var site in existedSites)
         {
             var key = ((int)(site.X / widthSegment), (int)(site.Y / heightSegment));
@@ -52,7 +52,7 @@ public class VoronoiPlane(Size size)
     /// The generated sites are guaranteed not to lie on the border of the plane (although they may be very close).
     /// Multi times to use will stack on points last generated 
     /// </summary>
-    public List<VoronoiCell> Generate(List<Coordinate> sites)
+    internal List<VoronoiCell> Generate(List<CoordinateD> sites)
     {
         Cells = UniquePoints(sites).Select(c => new VoronoiCell(c)).ToList();
         Edges.Clear();
@@ -60,7 +60,7 @@ public class VoronoiPlane(Size size)
         return Cells;
     }
 
-    private static List<Coordinate> UniquePoints(List<Coordinate> coordinates)
+    private static List<CoordinateD> UniquePoints(List<CoordinateD> coordinates)
     {
         coordinates.Sort((p1, p2) =>
         {
@@ -76,7 +76,7 @@ public class VoronoiPlane(Size size)
                 return -1;
             return 1;
         });
-        var unique = new List<Coordinate>();
+        var unique = new List<CoordinateD>();
         var last = coordinates.First();
         unique.Add(last);
         for (var index = 1; index < coordinates.Count; index++)

@@ -118,8 +118,8 @@ internal static class BorderClosing
         }
         var finalSite = previousEdgeNode != null ? previousEdgeNode is EdgeStartBorderNode ? previousEdgeNode.Edge.Right : previousEdgeNode.Edge.Left : defaultCell;
         var finalEdge = new VoronoiEdge(
-            nodes.Max?.Vertex ?? throw new ArgumentNullException(),
-            nodes.Min?.Vertex ?? throw new ArgumentNullException(), // we are building these clockwise, so by definition the left side is out of bounds
+            nodes.Max?.Vertex ?? throw VoronoiException.NullVertexOfBorderClosingNode(),
+            nodes.Min?.Vertex ?? throw VoronoiException.NullVertexOfBorderClosingNode(), // we are building these clockwise, so by definition the left side is out of bounds
             finalSite
         );
         edges.Add(finalEdge);

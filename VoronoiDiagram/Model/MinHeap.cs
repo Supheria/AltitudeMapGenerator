@@ -5,7 +5,9 @@ namespace AtlasGenerator.VoronoiDiagram.Model;
 public class MinHeap<T> where T : IComparable<T>
 {
     private readonly T[] items;
+
     public int Capacity { get; }
+
     public int Count { get; private set; }
 
     public MinHeap(int capacity)
@@ -32,7 +34,7 @@ public class MinHeap<T> where T : IComparable<T>
     public T Pop()
     {
         if (Count == 0)
-            throw new InvalidOperationException("Min heap is empty");
+            throw VoronoiException.EmptyMinHeap();
         if (Count == 1)
         {
             Count--;
@@ -49,7 +51,7 @@ public class MinHeap<T> where T : IComparable<T>
     public T Peek()
     {
         if (Count == 0)
-            throw new InvalidOperationException("Min heap is empty");
+            throw VoronoiException.EmptyMinHeap();
         return items[0];
     }
 

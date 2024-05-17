@@ -1,8 +1,9 @@
-﻿using LocalUtilities.TypeGeneral;
+﻿using AtlasGenerator.Common;
+using AtlasGenerator.VoronoiDiagram;
 
 namespace AtlasGenerator.DijkstraShortestPath;
 
-public class Dijkstra
+internal class Dijkstra
 {
     double[,] Graph { get; }
 
@@ -10,13 +11,14 @@ public class Dijkstra
 
     List<DijkstraNode> Nodes { get; }
 
-    public List<Edge>? Path { get; private set; }
+    internal List<EdgeD>? Path { get; private set; }
 
-    public Dijkstra(List<Edge> edges, List<Coordinate> vertexes, Coordinate startVertex, Coordinate finishVertex)
+    internal Dijkstra(List<EdgeD> edges, List<CoordinateD> vertexes, CoordinateD startVertex, CoordinateD finishVertex)
     {
-        if (vertexes.FirstOrDefault(c => c == startVertex) is null ||
-            vertexes.FirstOrDefault(c => c == finishVertex) is null)
-            throw new ArgumentNullException();
+        if (vertexes.FirstOrDefault(c => c == startVertex) is null)
+            throw VoronoiException.NoMatchVertexInDijkstra(nameof(startVertex));
+        if (vertexes.FirstOrDefault(c => c == finishVertex) is null)
+            throw VoronoiException.NoMatchVertexInDijkstra(nameof(finishVertex));
         Edges = edges.Select(e => new DijkstraEdge(e)).ToList();
         Nodes = [];
         Graph = new double[vertexes.Count, vertexes.Count];
@@ -38,10 +40,9 @@ public class Dijkstra
         Path = GetPath(startVertex, finishVertex);
     }
 
-    private List<Edge>? GetPath(Coordinate startVertex, Coordinate endVertex)
+    private List<EdgeD>? GetPath(CoordinateD startVertex, CoordinateD endVertex)
     {
-        if (Nodes.Count is 0)
-            throw new ArgumentNullException();
+        VoronoiException.ThrowIfCountZero(Nodes, "dijkstra nodes");
         Nodes.First(n => n.Coordinate == startVertex).Used = true;
         Nodes.ForEach(x =>
         {
@@ -76,7 +77,7 @@ public class Dijkstra
         var desNodeitem = Nodes.First(x => x.Coordinate == endVertex);
         if (!(desNodeitem.Used && desNodeitem.Weight < double.MaxValue))
             return null;
-        var path = new List<Edge>();
+        var path = new List<EdgeD>();
         foreach (var index in Enumerable.Range(0, desNodeitem.Nodes.Count - 1))
         {
             var e = Edges.FirstOrDefault(e => e.Edge.Starter == desNodeitem.Nodes[index] && e.Edge.Ender == desNodeitem.Nodes[index + 1]);

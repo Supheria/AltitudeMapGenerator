@@ -1,14 +1,14 @@
-﻿using LocalUtilities.TypeGeneral;
+﻿using AtlasGenerator.Common;
 
 namespace AtlasGenerator.DijkstraShortestPath;
 
 internal class DijkstraEdge
 {
-    public Edge Edge { get; }
+    internal EdgeD Edge { get; }
 
-    public double Weight { get; }
+    internal double Weight { get; }
 
-    public DijkstraEdge(Edge edge)
+    internal DijkstraEdge(EdgeD edge)
     {
         Edge = edge;
         var (x1, y1) = (Edge.Starter.X, Edge.Starter.Y);

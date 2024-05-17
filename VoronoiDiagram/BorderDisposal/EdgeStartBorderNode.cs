@@ -11,11 +11,4 @@ internal class EdgeStartBorderNode(VoronoiEdge edge, int fallbackComparisonIndex
     public override VoronoiVertex Vertex => Edge.Starter;
 
     public override double Angle => Vertex.AngleTo(Edge.Ender); // away from border
-
-#if DEBUG
-    public override string ToString()
-    {
-        return "Edge Start " + base.ToString();
-    }
-#endif
 }

@@ -22,7 +22,7 @@ internal class FortuneCircleEvent : IFortuneEvent
             if (this is null)
                 return 0;
             else
-                throw new ArgumentException(nameof(other));
+                throw VoronoiException.NullFortuneCircleEvent(nameof(other));
         }
         int c = Y.CompareTo(other.Y);
         return c == 0 ? X.CompareTo(other.X) : c;

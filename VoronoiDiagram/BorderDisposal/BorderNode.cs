@@ -75,15 +75,4 @@ internal abstract class BorderNode
         // Smaller angle comes first
         return angle1.ApproxCompareTo(angle2);
     }
-#if DEBUG
-    public override string ToString()
-    {
-        return Vertex + " @ " + BorderLocation;
-    }
-
-    public string ToString(string format)
-    {
-        return Vertex.ToString(format) + " @ " + BorderLocation;
-    }
-#endif
 }

@@ -2,17 +2,36 @@
 
 namespace AtlasGenerator.VoronoiDiagram;
 
-public class VoronoiException : Exception
+internal class VoronoiException(string message) : Exception(message)
 {
-    public static void ThrowIfCountZero(List<VoronoiCell> voronoiSites)
+    internal static void ThrowIfCountZero<T>(List<T> items, string name)
     {
-        if (voronoiSites.Count is 0)
-            throw new("This data is not ready yet, you must add sites to the plane first.");
+        if (items.Count is 0)
+            throw new VoronoiException($"{name} is empty");
     }
 
-    public static void ThrowIfCountZero(List<VoronoiEdge> voronoiEdges)
+    internal static VoronoiException EmptyMinHeap()
     {
-        if (voronoiEdges.Count is 0)
-            throw new("This data is not ready yet, you must tessellate the plane first.");
+        return new($"Min heap is empty");
+    }
+
+    internal static VoronoiException NullVertexOfBorderClosingNode()
+    {
+        return new($"vertex of node in border closing is null");
+    }
+
+    internal static VoronoiException NullFortuneCircleEvent(string name)
+    {
+        return new($"{name} is null fortune circle event");
+    }
+
+    internal static VoronoiException NullFortuneSiteEvent(string name)
+    {
+        return new($"{name} is null fortune circle event");
+    }
+
+    internal static VoronoiException NoMatchVertexInDijkstra(string name)
+    {
+        return new($"there is no match to {name} in vertex list of dijkstra");
     }
 }

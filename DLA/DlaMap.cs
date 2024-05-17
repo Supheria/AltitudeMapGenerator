@@ -4,16 +4,18 @@ using LocalUtilities.TypeGeneral;
 
 namespace AtlasGenerator.DLA;
 
-public class DlaMap(VoronoiCell cell)
+internal class DlaMap(VoronoiCell cell)
 {
-    Dictionary<(int X, int Y), DlaPixel> PixelMap { get; } = [];
+    Dictionary<Coordinate, DlaPixel> PixelMap { get; } = [];
 
     VoronoiCell Cell { get; set; } = cell;
 
     Rectangle Bounds { get; set; } = cell.GetBounds();
 
+    internal double AltitudeMax { get; private set; } = 0;
+
     //#if DEBUG
-    public static TestForm TestForm { get; } = new();
+    internal static TestForm TestForm { get; } = new();
     //#endif
     /// <summary>
     /// 
@@ -21,17 +23,17 @@ public class DlaMap(VoronoiCell cell)
     /// <param name="pixelCount"></param>
     /// <param name="density">[0,1], bigger means that grid-shape is closer to voronoi-cells' shape</param>
     /// <returns></returns>
-    public List<DlaPixel> Generate(int pixelCount, float density)
+    internal List<DlaPixel> Generate(int pixelCount, float density)
     {
         PixelMap.Clear();
-        (int X, int Y) root = ((int)Cell.Site.X, (int)Cell.Site.Y);
-        //var root = Region.Site;
-        PixelMap[root] = new(root);
+        AltitudeMax = 0;
+        var root = new Coordinate((int)Cell.Site.X, (int)Cell.Site.Y);
+        PixelMap[root] = new(root.X, root.Y);
         bool innerFilter(int x, int y) => Cell.ContainPoint(x, y);
         for (int i = 0; PixelMap.Count < (int)(pixelCount * density); i++)
         {
             var pixel = AddWalker(innerFilter);
-            PixelMap[(pixel.X, pixel.Y)] = pixel;
+            PixelMap[pixel.Coordinate] = pixel;
             TestForm.Now++;
             TestForm.Progress();
         }
@@ -39,7 +41,7 @@ public class DlaMap(VoronoiCell cell)
         for (int i = 0; PixelMap.Count < pixelCount; i++)
         {
             var pixel = AddWalker(outerFilter);
-            PixelMap[(pixel.X, pixel.Y)] = pixel;
+            PixelMap[pixel.Coordinate] = pixel;
             TestForm.Now++;
             TestForm.Progress();
         }
@@ -49,10 +51,9 @@ public class DlaMap(VoronoiCell cell)
 
     private DlaPixel AddWalker(Func<int, int, bool> pixelFilter)
     {
-        var pixel = new DlaPixel((
+        var pixel = new DlaPixel(
                 new Random().Next(Bounds.Left, Bounds.Right + 1),
-                new Random().Next(Bounds.Top, Bounds.Bottom + 1)
-                ));
+                new Random().Next(Bounds.Top, Bounds.Bottom + 1));
         while (!CheckStuck(pixel))
         {
             int x = pixel.X, y = pixel.Y;
@@ -88,11 +89,11 @@ public class DlaMap(VoronoiCell cell)
                     break;
             }
             if (pixelFilter(x, y))
-                pixel = new((x, y));
+                pixel = new(x, y);
             else
-                pixel = new((
+                pixel = new(
                     new Random().Next(Bounds.Left, Bounds.Right + 1),
-                    new Random().Next(Bounds.Top, Bounds.Bottom + 1)));
+                    new Random().Next(Bounds.Top, Bounds.Bottom + 1));
         }
         return pixel;
     }
@@ -106,57 +107,56 @@ public class DlaMap(VoronoiCell cell)
         var right = X + 1;//Math.Min(x + 1, Bounds.Right);
         var bottom = Y + 1; //Math.Min(y + 1, Bounds.Bottom);
         bool isStucked = false;
-        if (PixelMap.ContainsKey((X, Y)))
+        if (PixelMap.ContainsKey(new(X, Y)))
             return false;
-        if (PixelMap.TryGetValue((left, Y), out var stucked))
+        if (PixelMap.TryGetValue(new(left, Y), out var stucked))
         {
-            pixel.Neighbor[Direction.Left] = (left, Y);
-            stucked.Neighbor[Direction.Right] = (X, Y);
+            pixel.Neighbor[Direction.Left] = new(left, Y);
+            stucked.Neighbor[Direction.Right] = new(X, Y);
             isStucked = true;
         }
-        if (PixelMap.TryGetValue((right, Y), out stucked))
+        if (PixelMap.TryGetValue(new(right, Y), out stucked))
         {
-            pixel.Neighbor[Direction.Right] = (right, Y);
-            stucked.Neighbor[Direction.Left] = (X, Y);
+            pixel.Neighbor[Direction.Right] = new(right, Y);
+            stucked.Neighbor[Direction.Left] = new(X, Y);
             isStucked = true;
         }
-        if (PixelMap.TryGetValue((X, top), out stucked))
+        if (PixelMap.TryGetValue(new(X, top), out stucked))
         {
-            pixel.Neighbor[Direction.Top] = (X, top);
-            stucked.Neighbor[Direction.Bottom] = (X, Y);
+            pixel.Neighbor[Direction.Top] = new(X, top);
+            stucked.Neighbor[Direction.Bottom] = new(X, Y);
             isStucked = true;
         }
-        if (PixelMap.TryGetValue((X, bottom), out stucked))
+        if (PixelMap.TryGetValue(new(X, bottom), out stucked))
         {
-            pixel.Neighbor[Direction.Bottom] = (X, bottom);
-            stucked.Neighbor[Direction.Top] = (X, Y);
+            pixel.Neighbor[Direction.Bottom] = new(X, bottom);
+            stucked.Neighbor[Direction.Top] = new(X, Y);
             isStucked = true;
         }
-        if (PixelMap.TryGetValue((left, top), out stucked))
+        if (PixelMap.TryGetValue(new(left, top), out stucked))
         {
-            pixel.Neighbor[Direction.LeftTop] = (left, top);
-            stucked.Neighbor[Direction.BottomRight] = (X, Y);
+            pixel.Neighbor[Direction.LeftTop] = new(left, top);
+            stucked.Neighbor[Direction.BottomRight] = new(X, Y);
             isStucked = true;
         }
-        if (PixelMap.TryGetValue((left, bottom), out stucked))
+        if (PixelMap.TryGetValue(new(left, bottom), out stucked))
         {
-            pixel.Neighbor[Direction.LeftBottom] = (left, bottom);
-            stucked.Neighbor[Direction.TopRight] = (X, Y);
+            pixel.Neighbor[Direction.LeftBottom] = new(left, bottom);
+            stucked.Neighbor[Direction.TopRight] = new(X, Y);
             isStucked = true;
         }
-        if (PixelMap.TryGetValue((right, top), out stucked))
+        if (PixelMap.TryGetValue(new(right, top), out stucked))
         {
-            pixel.Neighbor[Direction.TopRight] = (right, top);
-            stucked.Neighbor[Direction.LeftBottom] = (X, Y);
+            pixel.Neighbor[Direction.TopRight] = new(right, top);
+            stucked.Neighbor[Direction.LeftBottom] = new(X, Y);
             isStucked = true;
         }
-        if (PixelMap.TryGetValue((right, bottom), out stucked))
+        if (PixelMap.TryGetValue(new(right, bottom), out stucked))
         {
-            pixel.Neighbor[Direction.BottomRight] = (right, bottom);
-            stucked.Neighbor[Direction.LeftTop] = (X, Y);
+            pixel.Neighbor[Direction.BottomRight] = new(right, bottom);
+            stucked.Neighbor[Direction.LeftTop] = new(X, Y);
             isStucked = true;
         }
-
         return isStucked;
     }
     /// <summary>
@@ -177,6 +177,7 @@ public class DlaMap(VoronoiCell cell)
             CheckDirection(Direction.TopRight, pixel);
             CheckDirection(Direction.LeftBottom, pixel);
             CheckDirection(Direction.BottomRight, pixel);
+            AltitudeMax = Math.Max(AltitudeMax, pixel.Altitude);
         }
     }
 
@@ -191,62 +192,5 @@ public class DlaMap(VoronoiCell cell)
                 walker.ConnetNumber[direction] = 0;
         }
         return walker.ConnetNumber[direction];
-    }
-
-    public static Dictionary<(int X, int Y), DlaPixel> RelocatePixels(IList<DlaPixel> pixels)
-    {
-        var pixelMap = new Dictionary<(int X, int Y), DlaPixel>();
-        foreach (var pixel in pixels)
-            pixelMap[(pixel.X, pixel.Y)] = pixel;
-        foreach (var pixel in pixelMap.Values)
-        {
-            var x = pixel.X;
-            var y = pixel.Y;
-            var left = x - 1;
-            var top = y - 1;
-            var right = x + 1;
-            var bottom = y + 1;
-            if (pixelMap.TryGetValue((left, y), out var other) && !other.Neighbor.ContainsKey(Direction.Right))
-            {
-                pixel.Neighbor[Direction.Left] = (left, y);
-                other.Neighbor[Direction.Right] = (x, y);
-            }
-            if (pixelMap.TryGetValue((right, y), out other) && !other.Neighbor.ContainsKey(Direction.Left))
-            {
-                pixel.Neighbor[Direction.Right] = (right, y);
-                other.Neighbor[Direction.Left] = (x, y);
-            }
-            if (pixelMap.TryGetValue((x, top), out other) && !other.Neighbor.ContainsKey(Direction.Bottom))
-            {
-                pixel.Neighbor[Direction.Top] = (x, top);
-                other.Neighbor[Direction.Bottom] = (x, y);
-            }
-            if (pixelMap.TryGetValue((x, bottom), out other) && !other.Neighbor.ContainsKey(Direction.Top))
-            {
-                pixel.Neighbor[Direction.Bottom] = (x, bottom);
-                other.Neighbor[Direction.Top] = (x, y);
-            }
-            if (pixelMap.TryGetValue((left, top), out other) && !other.Neighbor.ContainsKey(Direction.BottomRight))
-            {
-                pixel.Neighbor[Direction.LeftTop] = (left, top);
-                other.Neighbor[Direction.BottomRight] = (x, y);
-            }
-            if (pixelMap.TryGetValue((left, bottom), out other) && !other.Neighbor.ContainsKey(Direction.TopRight))
-            {
-                pixel.Neighbor[Direction.LeftBottom] = (left, bottom);
-                other.Neighbor[Direction.TopRight] = (x, y);
-            }
-            if (pixelMap.TryGetValue((right, top), out other) && !other.Neighbor.ContainsKey(Direction.LeftBottom))
-            {
-                pixel.Neighbor[Direction.TopRight] = (right, top);
-                other.Neighbor[Direction.LeftBottom] = (x, y);
-            }
-            if (pixelMap.TryGetValue((right, bottom), out other) && !other.Neighbor.ContainsKey(Direction.LeftTop))
-            {
-                pixel.Neighbor[Direction.BottomRight] = (right, bottom);
-                other.Neighbor[Direction.LeftTop] = (x, y);
-            }
-        }
-        return pixelMap;
     }
 }

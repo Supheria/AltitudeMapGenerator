@@ -20,7 +20,7 @@ internal class FortuneSiteEvent : IFortuneEvent
             if (this is null)
                 return 0;
             else
-                throw new ArgumentNullException(nameof(other));
+                throw VoronoiException.NullFortuneSiteEvent(nameof(other));
         }
         int c = Y.CompareTo(other.Y);
         return c == 0 ? X.CompareTo(other.X) : c;

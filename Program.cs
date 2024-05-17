@@ -1,5 +1,6 @@
 using AtlasGenerator.DLA;
 using AtlasGenerator.Layout;
+using AtlasGenerator.Test;
 using LocalUtilities.SimpleScript.Serialization;
 using LocalUtilities.TypeGeneral;
 using System.Diagnostics;
@@ -83,23 +84,13 @@ public class Program
     //    return image;
     //}
 
-    public static int GetHeightMax(List<DlaPixel> pixels)
-    {
-        var heightMax = 0;
-        foreach (var pixel in pixels)
-        {
-            heightMax = Math.Max(heightMax, pixel.Height);
-        }
-        return heightMax;
-    }
-
     public static void Main()
     {
         //new VoronoiForm().ShowDialog();
-        //var data = new AtlasData("testMap", new(1000, 1000), new(5, 5), new(7, 6), RiverLayout.Type.Vertical, 500000, 0.66f, new RandomPointsGenerationGaussian());
+        //var data = new AtlasData("testMap", new(1000, 1000), new(5, 5), new(7, 6), RiverLayout.Type.Vertical, 550000, 0.66f, new RandomPointsGenerationGaussian());
         //var data = new AtlasData("testMap", new(500, 500), new(4, 4), new(5, 6), RiverLayout.Type.Horizontal, 120000, 0.66f, new RandomPointsGenerationGaussian());
 
-        var data = new AtlasData("testMap", new(200, 200), new(4, 4), new(4, 6), RiverLayout.Type.Horizontal, 17000, 0.66f, new RandomPointsGenerationGaussian());
+        //var data = new AtlasData("testMap", new(200, 200), new(4, 4), new(4, 6), RiverLayout.Type.Horizontal, 17000, 0.66f, new RandomPointsGenerationGaussian());
         //var atlas = new Atlas(data);
         //atlas.SaveToSimpleScript(true);
         var stopwatch = new Stopwatch();
@@ -136,10 +127,9 @@ public class Program
         double mountain = 0, water = 0, forest = 0;
         foreach (var pixels in atlas.PixelsMap.Values)
         {
-            var heightMax = GetHeightMax(pixels);
             foreach (var pixel in pixels)
             {
-                float heightRatio = (float)pixel.Height / (float)heightMax;
+                float heightRatio = (float)pixel.Altitude / (float)atlas.AltitudeMax;
                 if (heightRatio <= forestRatio)
                 {
                     pImage.SetPixel(pixel.X, pixel.Y, Color.ForestGreen);
