@@ -1,6 +1,6 @@
 ﻿using AtlasGenerator.Layout;
-using AtlasGenerator.VoronoiDiagram;
 using AtlasGenerator.VoronoiDiagram.Data;
+using LocalUtilities.TypeGeneral;
 using System.Drawing.Drawing2D;
 
 namespace AtlasGenerator.Test;
@@ -36,21 +36,31 @@ public partial class VoronoiForm : Form
 
     void SpreadPoints()
     {
-        var size = new Size(1000, 1000);
-        var pointGeneration = new RandomPointsGenerationGaussian();
-        if (Cells.Count is 0)
+        //var e = new Edge(new(100, 30), new(10, 150));
+        //var points = EdgeTool.GetInnerPoints(e);
+        //foreach (var p in points)
+        //    g.FillEllipse(Brushes.Red, p.X - 1, p.Y - 1, 2, 2);
+        //var size = new Size(1000, 1000);
+        //var pointGeneration = new RandomPointsGenerationGaussian();
+        //if (Cells.Count is 0)
+        //{
+        //    var plane = new VoronoiPlane(size);
+        //    var sites = plane.GenerateSites(SegmentNumber, pointGeneration);
+        //    Cells = plane.Generate(sites);
+        //}
+        //var river = new AtlasRiver(size, new(7, 7), RiverLayout.Type.BackwardSlash, pointGeneration, Cells.Select(c => c.Site).ToList());
+        //g.Clear(Color.White);
+        //foreach (var c in Cells)
+        //    g.DrawPolygon(Pens.LightGray, c.Vertexes.Select(p => (PointF)p).ToArray());
+
+        var data = new AtlasData("testMap", new(200, 200), new(4, 4), new(4, 6), RiverLayout.Type.Vertical, 2.15, 17000, 0.66f, new RandomPointsGenerationGaussian());
+        var atlas = new Atlas(data);
+        foreach (var p in atlas.RiverPoints)
         {
-            var plane = new VoronoiPlane(size);
-            var sites = plane.GenerateSites(SegmentNumber, pointGeneration);
-            Cells = plane.Generate(sites);
+
+            g.FillEllipse(Brushes.Red, p.X, p.Y, 1, 1);
         }
-        var river = new AtlasRiver(size, new(7, 7), RiverLayout.Type.BackwardSlash, pointGeneration, Cells.Select(c => c.Site).ToList());
-        g.Clear(Color.White);
-        foreach (var c in Cells)
-            g.DrawPolygon(Pens.LightGray, c.Vertexes.Select(p => (PointF)p).ToArray());
-        foreach (var p in river.River)
-            g.DrawLine(new Pen(Color.Green, 2f), p.Starter, p.Ender);
-        DrawVoronoi();
+        //DrawVoronoi();
         pb.Image = bitmap;
     }
 

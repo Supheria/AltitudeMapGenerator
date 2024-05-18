@@ -1,5 +1,5 @@
 ﻿using AtlasGenerator.VoronoiDiagram.Data;
-using LocalUtilities.TypeToolKit.Math;
+using LocalUtilities.TypeToolKit.Mathematic;
 
 namespace AtlasGenerator.VoronoiDiagram.Model;
 

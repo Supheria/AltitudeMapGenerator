@@ -33,7 +33,7 @@ internal class DlaMap(VoronoiCell cell)
         for (int i = 0; PixelMap.Count < (int)(pixelCount * density); i++)
         {
             var pixel = AddWalker(innerFilter);
-            PixelMap[pixel.Coordinate] = pixel;
+            PixelMap[pixel] = pixel;
             TestForm.Now++;
             TestForm.Progress();
         }
@@ -41,7 +41,7 @@ internal class DlaMap(VoronoiCell cell)
         for (int i = 0; PixelMap.Count < pixelCount; i++)
         {
             var pixel = AddWalker(outerFilter);
-            PixelMap[pixel.Coordinate] = pixel;
+            PixelMap[pixel] = pixel;
             TestForm.Now++;
             TestForm.Progress();
         }

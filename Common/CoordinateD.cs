@@ -1,7 +1,4 @@
-﻿using AtlasGenerator.VoronoiDiagram.Data;
-using LocalUtilities.TypeGeneral;
-using LocalUtilities.TypeGeneral.Convert;
-using LocalUtilities.TypeToolKit.Math;
+﻿using LocalUtilities.TypeGeneral;
 
 namespace AtlasGenerator.Common;
 
@@ -47,7 +44,7 @@ internal class CoordinateD(double x, double y)
 
     public static implicit operator Coordinate(CoordinateD coordinateD)
     {
-        return new((int)coordinateD.X, (int)coordinateD.Y);
+        return new((int)Math.Round(coordinateD.X), (int)Math.Round(coordinateD.Y));
     }
 
     public static implicit operator PointF(CoordinateD coordinate)

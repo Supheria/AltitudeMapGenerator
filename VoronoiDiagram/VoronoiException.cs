@@ -1,6 +1,4 @@
-﻿using AtlasGenerator.VoronoiDiagram.Data;
-
-namespace AtlasGenerator.VoronoiDiagram;
+﻿namespace AtlasGenerator.VoronoiDiagram;
 
 internal class VoronoiException(string message) : Exception(message)
 {

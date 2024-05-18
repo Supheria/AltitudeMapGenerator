@@ -14,18 +14,18 @@ internal class AtlasRiver
     Random Random { get; } = new();
 
     /// <summary>
-    /// position of border node, left and top are start, right and bottom are finish
+    /// position of border node
     /// </summary>
-    private enum NodeTowards
+    private enum NodeBorderPosition
     {
-        Start = 0,
-        Finish,
+        LeftOrTop = 0,
+        RightOrBottom,
     }
 
     /// <summary>
     /// nodes on the border
     /// </summary>
-    Dictionary<(int, NodeTowards Towards), HashSet<CoordinateD>> BorderNodeMap { get; } = [];
+    Dictionary<(int, NodeBorderPosition Towards), HashSet<CoordinateD>> BorderNodeMap { get; } = [];
 
     HashSet<CoordinateD> InnerNodes { get; set; } = [];
 
@@ -71,7 +71,7 @@ internal class AtlasRiver
         {
             if (RiverLayout.Layout[i].Start.VoronoiVertexFilter(vertex))
             {
-                var key = (i, NodeTowards.Start);
+                var key = (i, NodeBorderPosition.LeftOrTop);
                 if (BorderNodeMap.TryGetValue(key, out var nodes))
                     nodes.Add(vertex);
                 else
@@ -79,7 +79,7 @@ internal class AtlasRiver
             }
             else if (RiverLayout.Layout[i].Finish.VoronoiVertexFilter(vertex))
             {
-                var key = (i, NodeTowards.Finish);
+                var key = (i, NodeBorderPosition.RightOrBottom);
                 if (BorderNodeMap.TryGetValue(key, out var nodes))
                     nodes.Add(vertex);
                 else
@@ -90,8 +90,8 @@ internal class AtlasRiver
 
     private void GenerateRiver(int riverIndex)
     {
-        var startNodes = BorderNodeMap[(riverIndex, NodeTowards.Start)].ToList();
-        var finishNodes = BorderNodeMap[(riverIndex, NodeTowards.Finish)].ToList();
+        var startNodes = BorderNodeMap[(riverIndex, NodeBorderPosition.LeftOrTop)].ToList();
+        var finishNodes = BorderNodeMap[(riverIndex, NodeBorderPosition.RightOrBottom)].ToList();
         List<EdgeD>? river = null;
         var startVisited = new HashSet<CoordinateD>();
         var finishVisited = new HashSet<CoordinateD>();

@@ -2,7 +2,7 @@
 using AtlasGenerator.VoronoiDiagram.BorderDisposal;
 using AtlasGenerator.VoronoiDiagram.Data;
 using AtlasGenerator.VoronoiDiagram.Model;
-using LocalUtilities.TypeToolKit.Math;
+using LocalUtilities.TypeToolKit.Mathematic;
 
 namespace AtlasGenerator.VoronoiDiagram;
 
@@ -35,6 +35,7 @@ internal class VoronoiPlane(Size size)
             var key = ((int)(site.X / widthSegment), (int)(site.Y / heightSegment));
             excludes[key] = site;
         }
+        var sites = new List<CoordinateD>();
         for (int i = 0; i < segmentNumber.Width; i++)
         {
             for (int j = 0; j < segmentNumber.Height; j++)
@@ -42,10 +43,10 @@ internal class VoronoiPlane(Size size)
                 if (excludes.ContainsKey((i, j)))
                     continue;
                 var (X, Y) = pointsGeneration.Generate(widthSegment * i, heightSegment * j, widthSegment * (i + 1), heightSegment * (j + 1), 1).First();
-                existedSites.Add(new(X, Y));
+                sites.Add(new(X, Y));
             }
         }
-        return existedSites;
+        return sites;
     }
 
     /// <summary>

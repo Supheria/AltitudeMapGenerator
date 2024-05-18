@@ -1,6 +1,4 @@
-using AtlasGenerator.DLA;
 using AtlasGenerator.Layout;
-using AtlasGenerator.Test;
 using LocalUtilities.SimpleScript.Serialization;
 using LocalUtilities.TypeGeneral;
 using System.Diagnostics;
@@ -90,12 +88,12 @@ public class Program
         //var data = new AtlasData("testMap", new(1000, 1000), new(5, 5), new(7, 6), RiverLayout.Type.Vertical, 550000, 0.66f, new RandomPointsGenerationGaussian());
         //var data = new AtlasData("testMap", new(500, 500), new(4, 4), new(5, 6), RiverLayout.Type.Horizontal, 120000, 0.66f, new RandomPointsGenerationGaussian());
 
-        //var data = new AtlasData("testMap", new(200, 200), new(4, 4), new(4, 6), RiverLayout.Type.Horizontal, 17000, 0.66f, new RandomPointsGenerationGaussian());
-        //var atlas = new Atlas(data);
-        //atlas.SaveToSimpleScript(true);
+        var data = new AtlasData("testMap", new(200, 300), new(2, 3), new(6, 3), RiverLayout.Type.BackwardSlash, 1, 30000, 0.5f, new RandomPointsGenerationGaussian());
+        var atlas = new Atlas(data);
+        atlas.SaveToSimpleScript(true);
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-        var atlas = new Atlas("testMap").LoadFromSimpleScript();
+        //var atlas = new Atlas("testMap").LoadFromSimpleScript();
         stopwatch.Stop();
         var time = stopwatch.ElapsedMilliseconds;
         atlas.SaveToSimpleScript(false);
@@ -113,9 +111,9 @@ public class Program
         var g = Graphics.FromImage(image);
         g.Clear(Color.Black);
         g.FillRectangle(new SolidBrush(Color.LightYellow), atlas.Bounds);
-        foreach (var r in atlas.River)
+        foreach (var r in atlas.RiverPoints)
         {
-            g.DrawLine(new Pen(Color.LightBlue, 3f), r.Starter, r.Ender);
+            g.FillEllipse(new SolidBrush(Color.Red), r.X, r.Y, 1.5f, 1.5f);
         }
         //g.DrawPolygon(Pens.Black, bigMap.PolygonRegion.Select(p => new PointF(p.X, p.Y)).ToArray());
         //image.Save("test.bmp");
@@ -125,41 +123,32 @@ public class Program
         var mountainRatio = 0.2505f; // 3/12
         // waterRatio                // 8/12
         double mountain = 0, water = 0, forest = 0;
-        foreach (var pixels in atlas.PixelsMap.Values)
+        foreach (var point in atlas.AltitudePoints)
         {
-            foreach (var pixel in pixels)
+            float heightRatio = (float)point.Altitude / (float)atlas.AltitudeMax;
+            if (heightRatio <= forestRatio)
             {
-                float heightRatio = (float)pixel.Altitude / (float)atlas.AltitudeMax;
-                if (heightRatio <= forestRatio)
-                {
-                    pImage.SetPixel(pixel.X, pixel.Y, Color.ForestGreen);
-                    forest++;
-                }
-                else if (heightRatio > forestRatio && heightRatio <= forestRatio + mountainRatio)
-                {
-                    pImage.SetPixel(pixel.X, pixel.Y, Color.Black);
-                    mountain++;
-                }
-                else
-                {
-                    pImage.SetPixel(pixel.X, pixel.Y, Color.SkyBlue);
-                    water++;
-                }
+                pImage.SetPixel(point.X, point.Y, Color.ForestGreen);
+                forest++;
+            }
+            else if (heightRatio > forestRatio && heightRatio <= forestRatio + mountainRatio)
+            {
+                pImage.SetPixel(point.X, point.Y, Color.Black);
+                mountain++;
+            }
+            else
+            {
+                pImage.SetPixel(point.X, point.Y, Color.SkyBlue);
+                water++;
             }
         }
         pImage.UnlockBits();
-        foreach (var r in atlas.River)
-        {
-            g.DrawLine(new Pen(Color.LightBlue, 2f), r.Starter, r.Ender);
-        }
         var total = atlas.Width * atlas.Height;
         mountain = Math.Round(mountain / total * 100, 2);
         water = Math.Round(water / total * 100, 2);
         forest = Math.Round(forest / total * 100, 2);
         var plain = Math.Round(100 - (mountain + water + forest), 2);
-        var totalCount = 0;
-        foreach (var pixels in atlas.PixelsMap.Values)
-            totalCount += pixels.Count;
+        var totalCount = atlas.AltitudePoints.Count;
         g.DrawString($"\n\n\n生成数 {totalCount}\n\n范围 {atlas.Bounds}\n\n山地{mountain}% 平原{plain}%\n河水{water}% 树林{forest}%",
             new("仿宋", 15, FontStyle.Bold, GraphicsUnit.Pixel), new SolidBrush(Color.White), new RectangleF(0, image.Height - 200, image.Width, 200));
         //g.DrawPolygon(Pens.Black, bigMap.Region.CellVertices.Select(p=>new PointF((float)p.X, (float)p.Y)).ToArray());

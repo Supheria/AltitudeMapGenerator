@@ -1,4 +1,4 @@
-﻿using LocalUtilities.TypeToolKit.Math;
+﻿using LocalUtilities.TypeToolKit.Mathematic;
 
 namespace AtlasGenerator.VoronoiDiagram.Data;
 
@@ -51,7 +51,8 @@ internal class VoronoiEdge
         SlopeRise = left.Site.X - right.Site.X;
         SlopeRun = -(left.Site.Y - right.Site.Y);
         Intercept = null;
-        if (SlopeRise.ApproxEqualTo(0) || SlopeRun.ApproxEqualTo(0)) return;
+        if (SlopeRise.ApproxEqualTo(0) || SlopeRun.ApproxEqualTo(0))
+            return;
         Slope = SlopeRise / SlopeRun;
         Intercept = start.Y - Slope * start.X;
     }

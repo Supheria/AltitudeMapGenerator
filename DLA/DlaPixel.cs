@@ -4,8 +4,6 @@ namespace AtlasGenerator.DLA;
 
 internal class DlaPixel(int x, int y)
 {
-    public Coordinate Coordinate => new(X, Y);
-
     internal int X => x;
 
     internal int Y => y;
@@ -55,4 +53,10 @@ internal class DlaPixel(int x, int y)
     {
 
     }
+
+    public static implicit operator Coordinate(DlaPixel pixel)
+    {
+        return new(pixel.X, pixel.Y);
+    }
+
 }
