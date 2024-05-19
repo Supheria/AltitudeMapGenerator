@@ -1,9 +1,10 @@
-﻿using AtlasGenerator.Common;
-using AtlasGenerator.DijkstraShortestPath;
+﻿using AtlasGenerator.DijkstraShortestPath;
 using AtlasGenerator.Layout;
 using AtlasGenerator.VoronoiDiagram;
 using AtlasGenerator.VoronoiDiagram.Data;
 using LocalUtilities.TypeGeneral;
+using LocalUtilities.TypeToolKit.Mathematic;
+using static System.Windows.Forms.AxHost;
 
 namespace AtlasGenerator;
 
@@ -25,40 +26,69 @@ internal class AtlasRiver
     /// <summary>
     /// nodes on the border
     /// </summary>
-    Dictionary<(int, NodeBorderPosition Towards), HashSet<CoordinateD>> BorderNodeMap { get; } = [];
+    Dictionary<(int, NodeBorderPosition Towards), HashSet<Coordinate>> BorderNodeMap { get; } = [];
 
-    HashSet<CoordinateD> InnerNodes { get; set; } = [];
+    HashSet<Coordinate> InnerNodes { get; set; } = [];
 
-    HashSet<EdgeD> Edges { get; set; } = [];
+    HashSet<Edge> Edges { get; set; } = [];
 
-    internal HashSet<EdgeD> River { get; private set; } = [];
+    double EdgeLengthMax { get; set; } = 0;
+
+    HashSet<Edge> Rivers { get; set; } = [];
+
+    Dictionary<int, List<Coordinate>> EdgeSiteMap { get; } = [];
+
+    double Width { get; }
+
+    internal HashSet<Coordinate> River { get; private set; } = [];
 
     /// <summary>
     /// when rivers generated not match to layout, will be set to false in <see cref="GenerateRiver"/>
     /// </summary>
     internal bool Successful { get; private set; } = true;
 
-    internal AtlasRiver(Size size, Size segmentNumber, RiverLayout.Type riverLayoutType, IPointsGeneration pointsGeneration, List<CoordinateD> existedSites)
+    internal AtlasRiver(double width, Size size, Size segmentNumber, RiverLayout.Type riverLayoutType, List<Coordinate> existedSites)
     {
+        Width = width;
         RiverLayout = riverLayoutType.Parse()(size);
         List<VoronoiCell> cells;
         var plane = new VoronoiPlane(size);
-        var sites = plane.GenerateSites(segmentNumber, pointsGeneration, existedSites);
+        var sites = plane.GenerateSites(segmentNumber, existedSites);
         cells = plane.Generate(sites);
         foreach (var cell in cells)
         {
-            foreach (var vertex in cell.Vertexes)
+            for (int i = 0; i < cell.Vertexes.Count; i++)
             {
+                var vertex = cell.Vertexes[i];
                 if (vertex.DirectionOnBorder is Direction.None)
                     InnerNodes.Add(vertex);
                 else
                     BorderNodeFilter(vertex);
                 var nextVertex = cell.VertexCounterClockwiseNext(vertex);
-                Edges.Add(new(vertex, nextVertex));
+                addEdge(new(vertex, nextVertex), cell.Site);
             }
         }
         for (int i = 0; i < RiverLayout.Layout.Count; i++)
             GenerateRiver(i);
+        GenerateBranch();
+        void addEdge(Edge edge, Coordinate site)
+        {
+            Edges.Add(edge);
+            var signature = GetEdgeSignature(edge);
+            if (EdgeSiteMap.TryGetValue(signature, out var list))
+                list.Add(site);
+            else
+                EdgeSiteMap[signature] = [site];
+            EdgeLengthMax = Math.Max(edge.Length, EdgeLengthMax);
+        }
+    }
+
+    private int GetEdgeSignature(Edge edge)
+    {
+        //return HashCode.Combine(Starter.GetHashCode(), Ender.GetHashCode());
+        var left = edge.Starter.X < edge.Ender.X ? edge.Starter : edge.Ender;
+        var right = edge.Starter.X > edge.Ender.X ? edge.Starter : edge.Ender;
+        return HashCode.Combine(left, right);
     }
 
     /// <summary>
@@ -90,12 +120,25 @@ internal class AtlasRiver
 
     private void GenerateRiver(int riverIndex)
     {
-        var startNodes = BorderNodeMap[(riverIndex, NodeBorderPosition.LeftOrTop)].ToList();
-        var finishNodes = BorderNodeMap[(riverIndex, NodeBorderPosition.RightOrBottom)].ToList();
-        List<EdgeD>? river = null;
-        var startVisited = new HashSet<CoordinateD>();
-        var finishVisited = new HashSet<CoordinateD>();
-        var existed = River.ToHashSet();
+        List<Coordinate> startNodes, finishNodes;
+        if (BorderNodeMap.TryGetValue((riverIndex, NodeBorderPosition.LeftOrTop), out var set))
+            startNodes = set.ToList();
+        else
+        {
+            Successful = false;
+            return;
+        }
+        if (BorderNodeMap.TryGetValue((riverIndex, NodeBorderPosition.RightOrBottom), out set))
+            finishNodes = set.ToList();
+        else
+        {
+            Successful = false;
+            return;
+        }
+        List<Edge>? river = null;
+        var startVisited = new HashSet<Coordinate>();
+        var finishVisited = new HashSet<Coordinate>();
+        var existed = Rivers.ToHashSet();
         do
         {
             if (startVisited.Count == startNodes.Count && finishNodes.Count == finishNodes.Count)
@@ -109,8 +152,27 @@ internal class AtlasRiver
             river = new Dijkstra(Edges.ToList(), nodes, start, finish).Path;
         } while (river is null || river.FirstOrDefault(existed.Contains) is not null);
         if (river is not null && river.FirstOrDefault(existed.Contains) is null)
-            river.ForEach(e => River.Add(e));
+            river.ForEach(e => Rivers.Add(e));
         else
             Successful = false;
+    }
+
+    private void GenerateBranch()
+    {
+        var visited = new HashSet<Coordinate>();
+        foreach(var edge in Rivers)
+        {
+            var points = edge.GetInnerPoints(Width);
+            points.ForEach(x => River.Add(x));
+            if (edge.Length.ApproxLessThan(EdgeLengthMax / 5))
+                continue;
+            var point = points[Random.Next(0, points.Count)];
+            var sites = EdgeSiteMap[GetEdgeSignature(edge)];
+            var site = sites[Random.Next(0, sites.Count)];
+            if (visited.Contains(site))
+                continue;
+            visited.Add(site);
+            new Edge(point, site).GetInnerPoints(Width / 2).ForEach(x => River.Add(x));
+        }
     }
 }

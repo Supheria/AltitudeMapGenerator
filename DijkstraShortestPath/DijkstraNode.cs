@@ -1,13 +1,13 @@
-﻿using AtlasGenerator.Common;
+﻿using LocalUtilities.TypeGeneral;
 
 namespace AtlasGenerator.DijkstraShortestPath;
 
-internal class DijkstraNode(CoordinateD node, int index)
+internal class DijkstraNode(Coordinate node, int index)
 {
     internal bool Used { get; set; } = false;
-    internal List<CoordinateD> Nodes { get; } = [];
+    internal List<Coordinate> Nodes { get; } = [];
 
-    internal CoordinateD Coordinate { get; set; } = node;
+    internal Coordinate Coordinate { get; set; } = node;
 
     internal int Index { get; set; } = index;
 

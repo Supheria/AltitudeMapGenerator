@@ -1,5 +1,4 @@
-﻿using AtlasGenerator.Common;
-using AtlasGenerator.DLA;
+﻿using AtlasGenerator.DLA;
 using AtlasGenerator.VoronoiDiagram;
 using LocalUtilities.SimpleScript.Serialization;
 using LocalUtilities.TypeGeneral;
@@ -17,39 +16,47 @@ public class Atlas : ISsSerializable
 
     public double AltitudeMax { get; private set; } = 0;
 
-    public Rectangle Bounds { get; private set; }
+    public Rectangle Bounds
+    {
+        get => _bounds;
+        private set
+        {
+            _bounds = value;
+            Area = _bounds.Width * _bounds.Height;
+        }
+    }
+
+    Rectangle _bounds = new();
 
     public int Width => Bounds.Width;
 
     public int Height => Bounds.Height;
 
+    public int Area { get; private set; }
+
+    public double[] RandomTable { get; private set; } = [];
+
     public string LocalName { get; set; }
 
-    public Atlas()
+    public Atlas(string localName)
     {
-        LocalName = nameof(Atlas);
+        LocalName = localName;
     }
 
     public Atlas(AtlasData data)
     {
         LocalName = data.Name;
         VoronoiPlane plane;
-        List<CoordinateD> sites;
+        List<Coordinate> sites;
         AtlasRiver river;
         do
         {
             Bounds = new(new(0, 0), data.Size);
             plane = new VoronoiPlane(data.Size);
-            sites = plane.GenerateSites(data.SegmentNumber, data.PointsGeneration);
-            river = new AtlasRiver(data.Size, data.RiverSegmentNumber, data.RiverLayoutType, data.PointsGeneration, sites);
+            sites = plane.GenerateSites(data.SegmentNumber);
+            river = new AtlasRiver(data.RiverWidth, data.Size, data.RiverSegmentNumber, data.RiverLayoutType, sites);
         } while (river.Successful is false);
-        var riverPoints = new HashSet<Coordinate>();
-        foreach (var edge in river.River)
-        {
-            var points = ((Edge)edge).GetInnerPoints(data.RiverWidth);
-            points.ForEach(p => riverPoints.Add(p));
-        }
-        RiverPoints = riverPoints.ToList();
+        RiverPoints = river.River.ToList();
 
         DlaMap.TestForm.Total = data.PixelNumber;
         DlaMap.TestForm.Show();
@@ -58,12 +65,16 @@ public class Atlas : ISsSerializable
         Parallel.ForEach(plane.Generate(sites), (cell) =>
         {
             var dlaMap = new DlaMap(cell);
-            var pixels = dlaMap.Generate((int)(cell.GetArea() / data.Area * data.PixelNumber), data.PixelDensity);
+            var pixels = dlaMap.Generate((int)(cell.GetArea() / Area * data.PixelNumber), data.PixelDensity);
             altitudes.Add(dlaMap.AltitudeMax);
             OriginPoints.Add(cell.Site);
             AltitudePoints.AddRange(pixels.Select(p => new AtlasPoint(p.X, p.Y, p.Altitude)));
         });
         AltitudeMax = altitudes.Max();
+        var random = new Random();
+        RandomTable = new double[data.PixelNumber / 9];
+        for (int i = 0; i < RandomTable.Length; i++)
+            RandomTable[i] = Math.Round(random.NextDouble(), 3);
     }
 
     public void Serialize(SsSerializer serializer)
@@ -74,6 +85,7 @@ public class Atlas : ISsSerializable
         serializer.WriteValues(nameof(OriginPoints), OriginPoints, c => c.ToString());
         serializer.WriteValues(nameof(RiverPoints), RiverPoints, c => c.ToString());
         serializer.WriteValues(nameof(AltitudePoints), AltitudePoints, p => p.ToString());
+        serializer.WriteValues(nameof(RandomTable), RandomTable.ToList(), d=>d.ToString());
 
     }
 
@@ -86,5 +98,6 @@ public class Atlas : ISsSerializable
         OriginPoints = deserializer.ReadValues(nameof(OriginPoints), Coordinate.Parse);
         RiverPoints = deserializer.ReadValues(nameof(RiverPoints), Coordinate.Parse);
         AltitudePoints = deserializer.ReadValues(nameof(AltitudePoints), AtlasPoint.Parse);
+        RandomTable = deserializer.ReadValues(nameof(RandomTable), double.Parse).ToArray();
     }
 }

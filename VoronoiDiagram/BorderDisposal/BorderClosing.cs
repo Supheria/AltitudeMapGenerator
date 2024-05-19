@@ -1,6 +1,5 @@
 ﻿using AtlasGenerator.VoronoiDiagram.Data;
 using LocalUtilities.TypeGeneral;
-using LocalUtilities.TypeToolKit.Mathematic;
 
 namespace AtlasGenerator.VoronoiDiagram.BorderDisposal;
 
@@ -79,10 +78,10 @@ internal static class BorderClosing
                 // But we may have site(s), so it's possible a site is in the bounds
                 // (two sites couldn't be or there would be an edge)
                 defaultCell = cells.FirstOrDefault(c =>
-                    c.Site.X.ApproxGreaterThanOrEqualTo(minX) &&
-                    c.Site.X.ApproxLessThanOrEqualTo(maxX) &&
-                    c.Site.Y.ApproxGreaterThanOrEqualTo(minY) &&
-                    c.Site.Y.ApproxLessThanOrEqualTo(maxY)
+                    c.Site.X >= (minX) &&
+                    c.Site.X <= (maxX) &&
+                    c.Site.Y >= (minY) &&
+                    c.Site.Y <= (maxY)
                     );
             }
         }

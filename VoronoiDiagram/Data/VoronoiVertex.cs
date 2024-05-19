@@ -1,5 +1,4 @@
-﻿using AtlasGenerator.Common;
-using LocalUtilities.TypeGeneral;
+﻿using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Mathematic;
 
 namespace AtlasGenerator.VoronoiDiagram.Data;
@@ -29,9 +28,9 @@ internal class VoronoiVertex(double x, double y, Direction borderLocation = Dire
         return Math.Atan2(other.Y - Y, other.X - X);
     }
 
-    public static implicit operator CoordinateD(VoronoiVertex vertex)
+    public static implicit operator Coordinate(VoronoiVertex vertex)
     {
-        return new(vertex.X, vertex.Y);
+        return new(vertex.X.ToInt(), vertex.Y.ToInt());
     }
 
     public static bool operator ==(VoronoiVertex? v1, object? v2)

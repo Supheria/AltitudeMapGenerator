@@ -1,4 +1,5 @@
 using AtlasGenerator.Layout;
+using AtlasGenerator.Test;
 using LocalUtilities.SimpleScript.Serialization;
 using LocalUtilities.TypeGeneral;
 using System.Diagnostics;
@@ -82,13 +83,15 @@ public class Program
     //    return image;
     //}
 
+    [STAThread]
     public static void Main()
     {
+        new AltiteudeForm().ShowDialog();
         //new VoronoiForm().ShowDialog();
         //var data = new AtlasData("testMap", new(1000, 1000), new(5, 5), new(7, 6), RiverLayout.Type.Vertical, 550000, 0.66f, new RandomPointsGenerationGaussian());
         //var data = new AtlasData("testMap", new(500, 500), new(4, 4), new(5, 6), RiverLayout.Type.Horizontal, 120000, 0.66f, new RandomPointsGenerationGaussian());
 
-        var data = new AtlasData("testMap", new(200, 300), new(2, 3), new(6, 3), RiverLayout.Type.BackwardSlash, 1, 30000, 0.5f, new RandomPointsGenerationGaussian());
+        var data = new AtlasData("testMap", new(200, 300), new(2, 3), new(6, 3), RiverLayout.Type.BackwardSlash, 1, 30000, 0.5f);
         var atlas = new Atlas(data);
         atlas.SaveToSimpleScript(true);
         var stopwatch = new Stopwatch();

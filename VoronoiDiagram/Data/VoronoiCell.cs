@@ -1,5 +1,4 @@
-﻿using AtlasGenerator.Common;
-using LocalUtilities.TypeGeneral;
+﻿using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Mathematic;
 
 namespace AtlasGenerator.VoronoiDiagram.Data;
@@ -10,9 +9,9 @@ namespace AtlasGenerator.VoronoiDiagram.Data;
 /// This has <see cref="Vertexes"/> of <see cref="VoronoiVertex"/>s that are the edge end points, i.e. the cell's vertices.
 /// This also has <see cref="Neighbours"/>, i.e. <see cref="VoronoiCell"/>s across the <see cref="VoronoiEdge"/>s.
 /// </summary>
-internal class VoronoiCell(CoordinateD coordinate)
+internal class VoronoiCell(Coordinate coordinate)
 {
-    internal CoordinateD Site { get; private set; } = coordinate;
+    internal Coordinate Site { get; private set; } = coordinate;
 
     /// <summary>
     /// The edges that make up this cell.
@@ -52,11 +51,11 @@ internal class VoronoiCell(CoordinateD coordinate)
     }
     List<VoronoiVertex>? _vertices = null;
 
-    internal CoordinateD Centroid
+    internal Coordinate Centroid
     {
         get => _centroid ??= GetCentroid();
     }
-    CoordinateD? _centroid = null;
+    Coordinate? _centroid = null;
 
     internal Direction DirectionOnBorder
     {
@@ -212,7 +211,7 @@ internal class VoronoiCell(CoordinateD coordinate)
     /// This is assuming a non-self-intersecting closed polygon of our cell.
     /// If we don't have a closed cell (i.e. unclosed "polygon"), then this will produce approximate results that aren't mathematically sound, but work for most purposes. 
     /// </summary>
-    private CoordinateD GetCentroid()
+    private Coordinate GetCentroid()
     {
         // Basically, https://stackoverflow.com/a/34732659
         // https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
@@ -256,7 +255,7 @@ internal class VoronoiCell(CoordinateD coordinate)
             return Site;
         centroidX /= area;
         centroidY /= area;
-        return new(centroidX, centroidY);
+        return new(centroidX.ToInt(), centroidY.ToInt());
     }
 
     internal Rectangle GetBounds()

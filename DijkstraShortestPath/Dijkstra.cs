@@ -1,5 +1,5 @@
-﻿using AtlasGenerator.Common;
-using AtlasGenerator.VoronoiDiagram;
+﻿using AtlasGenerator.VoronoiDiagram;
+using LocalUtilities.TypeGeneral;
 
 namespace AtlasGenerator.DijkstraShortestPath;
 
@@ -7,19 +7,19 @@ internal class Dijkstra
 {
     double[,] Graph { get; }
 
-    List<DijkstraEdge> Edges { get; }
+    List<Edge> Edges { get; }
 
     List<DijkstraNode> Nodes { get; }
 
-    internal List<EdgeD>? Path { get; private set; }
+    internal List<Edge>? Path { get; private set; }
 
-    internal Dijkstra(List<EdgeD> edges, List<CoordinateD> vertexes, CoordinateD startVertex, CoordinateD finishVertex)
+    internal Dijkstra(List<Edge> edges, List<Coordinate> vertexes, Coordinate startVertex, Coordinate finishVertex)
     {
         if (vertexes.FirstOrDefault(c => c == startVertex) is null)
             throw VoronoiException.NoMatchVertexInDijkstra(nameof(startVertex));
         if (vertexes.FirstOrDefault(c => c == finishVertex) is null)
             throw VoronoiException.NoMatchVertexInDijkstra(nameof(finishVertex));
-        Edges = edges.Select(e => new DijkstraEdge(e)).ToList();
+        Edges = edges;
         Nodes = [];
         Graph = new double[vertexes.Count, vertexes.Count];
         foreach (var row in Enumerable.Range(0, vertexes.Count))
@@ -32,15 +32,15 @@ internal class Dijkstra
                     Graph[row, colnum] = 0;
                     continue;
                 }
-                var edge = Edges.FirstOrDefault(x => x.Edge.Starter == rowNode && x.Edge.Ender == vertexes[colnum]);
-                Graph[row, colnum] = edge == null ? double.MaxValue : edge.Weight;
+                var edge = Edges.FirstOrDefault(x => x.Starter == rowNode && x.Ender == vertexes[colnum]);
+                Graph[row, colnum] = edge == null ? double.MaxValue : edge.Length;
             }
             Nodes.Add(new(vertexes[row], row));
         }
         Path = GetPath(startVertex, finishVertex);
     }
 
-    private List<EdgeD>? GetPath(CoordinateD startVertex, CoordinateD endVertex)
+    private List<Edge>? GetPath(Coordinate startVertex, Coordinate endVertex)
     {
         VoronoiException.ThrowIfCountZero(Nodes, "dijkstra nodes");
         Nodes.First(n => n.Coordinate == startVertex).Used = true;
@@ -77,16 +77,16 @@ internal class Dijkstra
         var desNodeitem = Nodes.First(x => x.Coordinate == endVertex);
         if (!(desNodeitem.Used && desNodeitem.Weight < double.MaxValue))
             return null;
-        var path = new List<EdgeD>();
+        var path = new List<Edge>();
         foreach (var index in Enumerable.Range(0, desNodeitem.Nodes.Count - 1))
         {
-            var e = Edges.FirstOrDefault(e => e.Edge.Starter == desNodeitem.Nodes[index] && e.Edge.Ender == desNodeitem.Nodes[index + 1]);
+            var e = Edges.FirstOrDefault(e => e.Starter == desNodeitem.Nodes[index] && e.Ender == desNodeitem.Nodes[index + 1]);
             if (e is not null)
-                path.Add(e.Edge);
+                path.Add(e);
         }
-        var edge = Edges.FirstOrDefault(x => x.Edge.Starter == desNodeitem.Nodes.Last() && x.Edge.Ender == endVertex);
+        var edge = Edges.FirstOrDefault(x => x.Starter == desNodeitem.Nodes.Last() && x.Ender == endVertex);
         if (edge is not null)
-            path.Add(edge.Edge);
+            path.Add(edge);
         return path;
     }
 

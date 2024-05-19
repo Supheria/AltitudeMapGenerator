@@ -1,4 +1,5 @@
 ﻿using AtlasGenerator.Layout;
+using AtlasGenerator.VoronoiDiagram;
 using AtlasGenerator.VoronoiDiagram.Data;
 using LocalUtilities.TypeGeneral;
 using System.Drawing.Drawing2D;
@@ -40,24 +41,23 @@ public partial class VoronoiForm : Form
         //var points = EdgeTool.GetInnerPoints(e);
         //foreach (var p in points)
         //    g.FillEllipse(Brushes.Red, p.X - 1, p.Y - 1, 2, 2);
-        //var size = new Size(1000, 1000);
-        //var pointGeneration = new RandomPointsGenerationGaussian();
-        //if (Cells.Count is 0)
-        //{
-        //    var plane = new VoronoiPlane(size);
-        //    var sites = plane.GenerateSites(SegmentNumber, pointGeneration);
-        //    Cells = plane.Generate(sites);
-        //}
-        //var river = new AtlasRiver(size, new(7, 7), RiverLayout.Type.BackwardSlash, pointGeneration, Cells.Select(c => c.Site).ToList());
-        //g.Clear(Color.White);
-        //foreach (var c in Cells)
-        //    g.DrawPolygon(Pens.LightGray, c.Vertexes.Select(p => (PointF)p).ToArray());
-
-        var data = new AtlasData("testMap", new(200, 200), new(4, 4), new(4, 6), RiverLayout.Type.Vertical, 2.15, 17000, 0.66f, new RandomPointsGenerationGaussian());
-        var atlas = new Atlas(data);
-        foreach (var p in atlas.RiverPoints)
+        var size = new Size(1000, 1000);
+        if (Cells.Count is 0)
         {
+            var plane = new VoronoiPlane(size);
+            var sites = plane.GenerateSites(SegmentNumber);
+            Cells = plane.Generate(sites);
+        }
+        var river = new AtlasRiver(2.5, size, new(5, 5), RiverLayout.Type.BackwardSlash, Cells.Select(c => c.Site).ToList());
+        g.Clear(Color.White);
+        foreach (var c in Cells)
+            g.DrawPolygon(Pens.LightGray, c.Vertexes.Select(p => (PointF)p).ToArray());
+        //DrawVoronoi();
 
+        //var data = new AtlasData("testMap", new(200, 200), new(4, 4), new(4, 6), RiverLayout.Type.Vertical, 2.15, 17000, 0.66f);
+        //var atlas = new Atlas(data);
+        foreach (var p in river.River)
+        {
             g.FillEllipse(Brushes.Red, p.X, p.Y, 1, 1);
         }
         //DrawVoronoi();
