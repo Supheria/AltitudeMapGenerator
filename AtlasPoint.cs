@@ -20,7 +20,7 @@ public class AtlasPoint(int x, int y, double altitude)
     {
         var list = str.ToArray();
         if (list.Length is 3)
-            return new(int.Parse(list[0]), int.Parse(list[1]), int.Parse(list[2]));
+            return new(int.Parse(list[0]), int.Parse(list[1]), double.Parse(list[2]));
         throw TypeConvertException.CannotConvertStringTo<AtlasPoint>();
     }
 

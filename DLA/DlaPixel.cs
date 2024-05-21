@@ -34,14 +34,14 @@ internal class DlaPixel(int x, int y)
                     topRight = 0;
                 if (!ConnetNumber.TryGetValue(Direction.LeftBottom, out var leftBottom))
                     leftBottom = 0;
-                _altitude = Math.Max(
-                    Math.Max(
-                        top + bottom - Math.Abs(top - bottom),
-                        left + right - Math.Abs(left - right)),
-                    Math.Max(
-                        leftTop + bottomRight - Math.Abs(leftTop - bottomRight),
-                        topRight + leftBottom - Math.Abs(topRight - leftBottom))
-                    );
+                var list = new List<int>()
+                {
+                    top + bottom - Math.Abs(top - bottom),
+                    left + right - Math.Abs(left - right),
+                    leftTop + bottomRight - Math.Abs(leftTop - bottomRight),
+                    topRight + leftBottom - Math.Abs(topRight - leftBottom),
+                };
+                _altitude = list.Max();
             }
             return _altitude;
         }

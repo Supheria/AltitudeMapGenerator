@@ -72,7 +72,7 @@ public class Atlas : ISsSerializable
         });
         AltitudeMax = altitudes.Max();
         var random = new Random();
-        RandomTable = new double[data.PixelNumber / 9];
+        RandomTable = new double[1000];
         for (int i = 0; i < RandomTable.Length; i++)
             RandomTable[i] = Math.Round(random.NextDouble(), 3);
     }
@@ -86,7 +86,6 @@ public class Atlas : ISsSerializable
         serializer.WriteValues(nameof(RiverPoints), RiverPoints, c => c.ToString());
         serializer.WriteValues(nameof(AltitudePoints), AltitudePoints, p => p.ToString());
         serializer.WriteValues(nameof(RandomTable), RandomTable.ToList(), d=>d.ToString());
-
     }
 
     public void Deserialize(SsDeserializer deserializer)
