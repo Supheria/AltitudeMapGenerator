@@ -2,10 +2,8 @@
 
 namespace AtlasGenerator;
 
-public class AtlasData(string name, Size size, Size segmentNumber, Size riverSegmentNumber, RiverLayout.Type riverLayoutType, double riverWidth, int pixelNumber, float pixelDensity)
+public class AtlasData(Size size, Size segmentNumber, Size riverSegmentNumber, RiverLayout.Type riverLayoutType, double riverWidth, int pixelNumber, float pixelDensity)
 {
-    public string Name { get; set; } = name;
-
     public Size Size { get; set; } = size;
 
     public Size SegmentNumber { get; set; } = segmentNumber;

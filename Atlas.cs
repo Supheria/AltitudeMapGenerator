@@ -1,4 +1,4 @@
-﻿using AtlasGenerator.DLA;
+using AtlasGenerator.DLA;
 using AtlasGenerator.VoronoiDiagram;
 using LocalUtilities.SimpleScript.Serialization;
 using LocalUtilities.TypeGeneral;
@@ -36,16 +36,15 @@ public class Atlas : ISsSerializable
 
     public double[] RandomTable { get; private set; } = [];
 
-    public string LocalName { get; set; }
+    public string LocalName { get; set; } = nameof(Atlas);
 
-    public Atlas(string localName)
+    public Atlas()
     {
-        LocalName = localName;
+
     }
 
     public Atlas(AtlasData data)
     {
-        LocalName = data.Name;
         VoronoiPlane plane;
         List<Coordinate> sites;
         AtlasRiver river;
@@ -70,6 +69,15 @@ public class Atlas : ISsSerializable
             OriginPoints.Add(cell.Site);
             AltitudePoints.AddRange(pixels.Select(p => new AtlasPoint(p.X, p.Y, p.Altitude)));
         });
+        var pointAltitudeMap = new Dictionary<Coordinate, double>();
+        foreach (var point in AltitudePoints)
+        {
+            if (pointAltitudeMap.ContainsKey(point))
+                pointAltitudeMap[point] += point.Altitude;
+            else
+                pointAltitudeMap[point] = point.Altitude;
+        }
+        AltitudePoints = pointAltitudeMap.Select(p => new AtlasPoint(p.Key.X, p.Key.Y, p.Value)).ToList();
         AltitudeMax = altitudes.Max();
         var random = new Random();
         RandomTable = new double[1000];
