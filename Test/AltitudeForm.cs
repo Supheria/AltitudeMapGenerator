@@ -38,7 +38,7 @@ internal class AltiteudeForm : ResizeableForm
 
     private void DrawCilent()
     {
-        AltitudeMap.Bounds = new(Left + 100, Top, Width - 100, Height);
+        AltitudeMap.Bounds = new(Left + 100, Top, ClientSize.Width - 100, ClientSize.Height);
         MakeMap();
     }
 
