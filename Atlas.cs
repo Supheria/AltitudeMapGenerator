@@ -2,7 +2,6 @@ using AtlasGenerator.DLA;
 using AtlasGenerator.VoronoiDiagram;
 using LocalUtilities.SimpleScript.Serialization;
 using LocalUtilities.TypeGeneral;
-using LocalUtilities.TypeToolKit.Mathematic;
 
 namespace AtlasGenerator;
 
@@ -93,7 +92,7 @@ public class Atlas : ISsSerializable
         serializer.WriteValues(nameof(OriginPoints), OriginPoints, c => c.ToString());
         serializer.WriteValues(nameof(RiverPoints), RiverPoints, c => c.ToString());
         serializer.WriteValues(nameof(AltitudePoints), AltitudePoints, p => p.ToString());
-        serializer.WriteValues(nameof(RandomTable), RandomTable.ToList(), d=>d.ToString());
+        serializer.WriteValues(nameof(RandomTable), RandomTable.ToList(), d => d.ToString());
     }
 
     public void Deserialize(SsDeserializer deserializer)

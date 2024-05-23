@@ -4,7 +4,6 @@ using AtlasGenerator.VoronoiDiagram;
 using AtlasGenerator.VoronoiDiagram.Data;
 using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Mathematic;
-using static System.Windows.Forms.AxHost;
 
 namespace AtlasGenerator;
 
@@ -160,7 +159,7 @@ internal class AtlasRiver
     private void GenerateBranch()
     {
         var visited = new HashSet<Coordinate>();
-        foreach(var edge in Rivers)
+        foreach (var edge in Rivers)
         {
             var points = edge.GetInnerPoints(Width);
             points.ForEach(x => River.Add(x));
