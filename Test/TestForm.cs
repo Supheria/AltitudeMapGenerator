@@ -1,12 +1,12 @@
 ﻿namespace AtlasGenerator.Test;
 
-public partial class TestForm : Form
+public partial class ProcessForm : Form
 {
     public float Total { get; set; } = 0;
 
     public float Now { get; set; } = 0;
 
-    public TestForm()
+    public ProcessForm()
     {
         InitializeComponent();
     }

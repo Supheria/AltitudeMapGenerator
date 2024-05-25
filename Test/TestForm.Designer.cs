@@ -1,6 +1,6 @@
 ﻿namespace AtlasGenerator.Test;
 
-partial class TestForm
+partial class ProcessForm
 {
     /// <summary>
     /// Required designer variable.

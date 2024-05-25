@@ -15,7 +15,7 @@ internal class DlaMap(VoronoiCell cell)
     internal double AltitudeMax { get; private set; } = 0;
 
     //#if DEBUG
-    internal static TestForm TestForm { get; } = new();
+    internal static ProcessForm TestForm { get; } = new();
     //#endif
     /// <summary>
     /// 
