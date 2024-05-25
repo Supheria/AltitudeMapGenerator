@@ -35,7 +35,7 @@ public class Atlas : ISsSerializable
 
     public double[] RandomTable { get; private set; } = [];
 
-    public string LocalName { get; set; } = nameof(Atlas);
+    public string LocalName => nameof(Atlas);
 
     public Atlas()
     {

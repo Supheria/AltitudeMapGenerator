@@ -9,7 +9,7 @@ internal class AltiteudeForm : ResizeableForm
 {
     Atlas? Atlas { get; set; } = null;
 
-    public override string LocalName { get; set; } = nameof(AltiteudeForm);
+    public override string LocalName => nameof(AltiteudeForm);
 
     Button OpenFile { get; } = new()
     {
