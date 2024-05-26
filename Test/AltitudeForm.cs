@@ -102,14 +102,14 @@ internal class AltiteudeForm : ResizeableForm
             var height = (pair.Value * heightRatio).ToInt();
             var top = mapHeight - height + 50;
             g.FillRectangle(new SolidBrush(Color.Green), new(left, top, colWidth, height));
-            g.DrawString($"{pair.Value}\n{Math.Round(pair.Value / (double)Atlas.AltitudePoints.Count * 100, 2)}%", LabelFont, new SolidBrush(Color.Red), new RectangleF(left, top - 50, colWidth, 50));
+            g.DrawString($"{pair.Value}\n{Math.Round(pair.Value / (double)Atlas.AltitudePoints.Count * 100, 2)}%", LabelFontData, new SolidBrush(Color.Red), new RectangleF(left, top - 50, colWidth, 50));
             var altitudeRatio = pair.Key / (double)Atlas.AltitudeMax;
 
             var altitudeHeight = mapHeight - altitudeRatio * mapHeight + 50;
             if (i is not 0)
                 g.DrawLine(Pens.Red, new PointF(colWidth * (i - 1), (float)lastAltiudeHeight), new(left, (float)altitudeHeight));
             lastAltiudeHeight = altitudeHeight;
-            g.DrawString(pair.Key.ToString(), LabelFont, new SolidBrush(Color.Black), new RectangleF(left, mapHeight + 50, colWidth, 50));
+            g.DrawString(pair.Key.ToString(), LabelFontData, new SolidBrush(Color.Black), new RectangleF(left, mapHeight + 50, colWidth, 50));
             i++;
         }
         g.Flush();
