@@ -32,6 +32,9 @@ public static class RiverLayoutType
                 (new(Direction.Left, OperatorType.LessThanOrEqualTo, size), new(Direction.Bottom, OperatorType.GreaterThanOrEqualTo, size)),
                 (new(Direction.Top, OperatorType.LessThanOrEqualTo, size), new(Direction.Right, OperatorType.GreaterThanOrEqualTo, size))
                 ),
+            RiverLayout.Type.OneForTest => (size) => new(
+                (new(Direction.Top, OperatorType.GreaterThanOrEqualTo, size), new(Direction.Left, OperatorType.GreaterThanOrEqualTo, size))
+                ),
             _ => throw new InvalidOperationException()
         };
     }

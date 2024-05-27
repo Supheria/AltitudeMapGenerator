@@ -12,5 +12,6 @@ public class RiverLayout(params (RiverEndnode Start, RiverEndnode Finish)[] endn
         Vertical,
         ForwardSlash,
         BackwardSlash,
+        OneForTest
     }
 }
