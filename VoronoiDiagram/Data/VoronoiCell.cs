@@ -1,7 +1,7 @@
 ﻿using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Mathematic;
 
-namespace AtlasGenerator.VoronoiDiagram.Data;
+namespace AltitudeMapGenerator.VoronoiDiagram.Data;
 
 /// <summary>
 /// The point/site/seed on the Voronoi plane.

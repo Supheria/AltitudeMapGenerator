@@ -1,4 +1,4 @@
-﻿namespace AtlasGenerator.Layout;
+﻿namespace AltitudeMapGenerator.Layout;
 
 public class RiverLayout(params (RiverEndnode Start, RiverEndnode Finish)[] endnodePairs)
 {

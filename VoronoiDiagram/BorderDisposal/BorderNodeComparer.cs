@@ -1,7 +1,7 @@
 ﻿using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Mathematic;
 
-namespace AtlasGenerator.VoronoiDiagram.BorderDisposal;
+namespace AltitudeMapGenerator.VoronoiDiagram.BorderDisposal;
 
 internal class BorderNodeComparer : IComparer<BorderNode>
 {

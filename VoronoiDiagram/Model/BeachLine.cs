@@ -1,7 +1,7 @@
-﻿using AtlasGenerator.VoronoiDiagram.Data;
+﻿using AltitudeMapGenerator.VoronoiDiagram.Data;
 using LocalUtilities.TypeToolKit.Mathematic;
 
-namespace AtlasGenerator.VoronoiDiagram.Model;
+namespace AltitudeMapGenerator.VoronoiDiagram.Model;
 
 internal class BeachSection(VoronoiCell cell)
 {

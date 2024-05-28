@@ -1,6 +1,6 @@
 ﻿using LocalUtilities.TypeGeneral;
 
-namespace AtlasGenerator.DijkstraShortestPath;
+namespace AltitudeMapGenerator.DijkstraShortestPath;
 
 internal class DijkstraNode(Coordinate node, int index)
 {

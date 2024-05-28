@@ -1,8 +1,8 @@
-﻿using AtlasGenerator.Layout;
+﻿using AltitudeMapGenerator.Layout;
 
-namespace AtlasGenerator;
+namespace AltitudeMapGenerator;
 
-public class AtlasData(Size size, Size segmentNumber, Size riverSegmentNumber, RiverLayout.Type riverLayoutType, double riverWidth, int pixelNumber, float pixelDensity)
+public class AltitudeMapData(Size size, Size segmentNumber, Size riverSegmentNumber, RiverLayout.Type riverLayoutType, double riverWidth, int pixelNumber, float pixelDensity)
 {
     public Size Size { get; set; } = size;
 

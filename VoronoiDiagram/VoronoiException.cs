@@ -1,4 +1,4 @@
-﻿namespace AtlasGenerator.VoronoiDiagram;
+﻿namespace AltitudeMapGenerator.VoronoiDiagram;
 
 internal class VoronoiException(string message) : Exception(message)
 {

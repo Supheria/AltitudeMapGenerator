@@ -1,4 +1,4 @@
-﻿namespace AtlasGenerator.VoronoiDiagram.Model;
+﻿namespace AltitudeMapGenerator.VoronoiDiagram.Model;
 
 public class RBTreeNode<T>
 {

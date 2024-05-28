@@ -1,7 +1,7 @@
 ﻿using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Mathematic;
 
-namespace AtlasGenerator.VoronoiDiagram.Data;
+namespace AltitudeMapGenerator.VoronoiDiagram.Data;
 
 /// <summary>
 /// The vertices/nodes of the Voronoi cells, i.e. the points equidistant to three or more Voronoi sites.

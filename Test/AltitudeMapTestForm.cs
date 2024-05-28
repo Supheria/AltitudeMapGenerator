@@ -1,13 +1,13 @@
-﻿using AtlasGenerator.Layout;
+﻿using AltitudeMapGenerator.Layout;
 using LocalUtilities.SimpleScript.Serialization;
 using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Mathematic;
 
-namespace AtlasGenerator.Test;
+namespace AltitudeMapGenerator.Test;
 
 internal class AltiteudeForm : ResizeableForm
 {
-    Atlas? Atlas { get; set; } = null;
+    AltitudeMap? Atlas { get; set; } = null;
 
     public override string LocalName => nameof(AltiteudeForm);
 
@@ -58,7 +58,7 @@ internal class AltiteudeForm : ResizeableForm
 
     private void GenerateNew_Click(object? sender, EventArgs e)
     {
-        var data = new AtlasData(new(300, 300), new(2, 2), new(6, 6), RiverLayout.Type.BackwardSlash, 2.25, 50000, 0.66f);
+        var data = new AltitudeMapData(new(300, 300), new(2, 2), new(6, 6), RiverLayout.Type.BackwardSlash, 2.25, 50000, 0.66f);
         Atlas = new(data);
         Atlas.SaveToSimpleScript(false);
         MakeMap();
@@ -69,7 +69,7 @@ internal class AltiteudeForm : ResizeableForm
         var openFile = new OpenFileDialog();
         if (openFile.ShowDialog() == DialogResult.Cancel)
             return;
-        Atlas = new Atlas().LoadFromSimpleScript(openFile.FileName);
+        Atlas = new AltitudeMap().LoadFromSimpleScript(openFile.FileName);
         MakeMap();
     }
 

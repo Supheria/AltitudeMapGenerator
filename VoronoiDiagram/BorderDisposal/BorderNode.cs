@@ -1,8 +1,8 @@
-﻿using AtlasGenerator.VoronoiDiagram.Data;
+﻿using AltitudeMapGenerator.VoronoiDiagram.Data;
 using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Mathematic;
 
-namespace AtlasGenerator.VoronoiDiagram.BorderDisposal;
+namespace AltitudeMapGenerator.VoronoiDiagram.BorderDisposal;
 
 internal abstract class BorderNode
 {

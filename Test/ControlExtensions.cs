@@ -1,4 +1,4 @@
-﻿namespace AtlasGenerator.Test;
+﻿namespace AltitudeMapGenerator.Test;
 
 /// <summary>
 /// 摘要：

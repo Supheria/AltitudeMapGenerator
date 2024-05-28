@@ -1,4 +1,4 @@
-﻿namespace AtlasGenerator.Test;
+﻿namespace AltitudeMapGenerator.Test;
 
 public partial class ProcessForm : Form
 {

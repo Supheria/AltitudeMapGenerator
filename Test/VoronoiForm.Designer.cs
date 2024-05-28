@@ -7,7 +7,7 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 
-namespace AtlasGenerator.Test
+namespace AltitudeMapGenerator.Test
 {
 	partial class VoronoiForm
 	{

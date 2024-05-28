@@ -1,6 +1,6 @@
 using LocalUtilities.TypeGeneral;
 
-namespace AtlasGenerator.DLA;
+namespace AltitudeMapGenerator.DLA;
 
 internal class DlaPixel(int x, int y)
 {

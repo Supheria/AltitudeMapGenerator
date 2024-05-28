@@ -1,13 +1,13 @@
-﻿using AtlasGenerator.DijkstraShortestPath;
-using AtlasGenerator.Layout;
-using AtlasGenerator.VoronoiDiagram;
-using AtlasGenerator.VoronoiDiagram.Data;
+﻿using AltitudeMapGenerator.DijkstraShortestPath;
+using AltitudeMapGenerator.Layout;
+using AltitudeMapGenerator.VoronoiDiagram;
+using AltitudeMapGenerator.VoronoiDiagram.Data;
 using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Mathematic;
 
-namespace AtlasGenerator;
+namespace AltitudeMapGenerator;
 
-internal class AtlasRiver
+internal class RiverGenerator
 {
     RiverLayout RiverLayout { get; }
 
@@ -46,7 +46,7 @@ internal class AtlasRiver
     /// </summary>
     internal bool Successful { get; private set; } = true;
 
-    internal AtlasRiver(double width, Size size, Size segmentNumber, RiverLayout.Type riverLayoutType, List<Coordinate> existedSites)
+    internal RiverGenerator(double width, Size size, Size segmentNumber, RiverLayout.Type riverLayoutType, List<Coordinate> existedSites)
     {
         Width = width;
         RiverLayout = riverLayoutType.Parse()(size);

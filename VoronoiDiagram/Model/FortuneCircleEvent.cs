@@ -1,6 +1,6 @@
-﻿using AtlasGenerator.VoronoiDiagram.Data;
+﻿using AltitudeMapGenerator.VoronoiDiagram.Data;
 
-namespace AtlasGenerator.VoronoiDiagram.Model;
+namespace AltitudeMapGenerator.VoronoiDiagram.Model;
 
 internal class FortuneCircleEvent : IFortuneEvent
 {

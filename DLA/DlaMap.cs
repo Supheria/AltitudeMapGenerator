@@ -1,8 +1,8 @@
-using AtlasGenerator.Test;
-using AtlasGenerator.VoronoiDiagram.Data;
+using AltitudeMapGenerator.Test;
+using AltitudeMapGenerator.VoronoiDiagram.Data;
 using LocalUtilities.TypeGeneral;
 
-namespace AtlasGenerator.DLA;
+namespace AltitudeMapGenerator.DLA;
 
 internal class DlaMap(VoronoiCell cell)
 {

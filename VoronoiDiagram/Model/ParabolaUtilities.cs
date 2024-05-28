@@ -1,7 +1,7 @@
 ﻿using LocalUtilities.TypeToolKit.Mathematic;
 using System.Runtime.CompilerServices;
 
-namespace AtlasGenerator.VoronoiDiagram.Model;
+namespace AltitudeMapGenerator.VoronoiDiagram.Model;
 
 internal class ParabolaUtilities
 {

@@ -1,7 +1,7 @@
-﻿using AtlasGenerator.VoronoiDiagram.Data;
+﻿using AltitudeMapGenerator.VoronoiDiagram.Data;
 using LocalUtilities.TypeGeneral;
 
-namespace AtlasGenerator.VoronoiDiagram.BorderDisposal;
+namespace AltitudeMapGenerator.VoronoiDiagram.BorderDisposal;
 
 internal class EdgeStartBorderNode(VoronoiEdge edge, int fallbackComparisonIndex) :
         EdgeBorderNode(edge, fallbackComparisonIndex)

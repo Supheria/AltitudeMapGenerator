@@ -1,6 +1,6 @@
 ﻿using LocalUtilities.TypeGeneral;
 
-namespace AtlasGenerator.Layout;
+namespace AltitudeMapGenerator.Layout;
 
 public static class RiverLayoutType
 {

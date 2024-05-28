@@ -1,10 +1,10 @@
-﻿using AtlasGenerator.VoronoiDiagram.BorderDisposal;
-using AtlasGenerator.VoronoiDiagram.Data;
-using AtlasGenerator.VoronoiDiagram.Model;
+﻿using AltitudeMapGenerator.VoronoiDiagram.BorderDisposal;
+using AltitudeMapGenerator.VoronoiDiagram.Data;
+using AltitudeMapGenerator.VoronoiDiagram.Model;
 using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Mathematic;
 
-namespace AtlasGenerator.VoronoiDiagram;
+namespace AltitudeMapGenerator.VoronoiDiagram;
 
 /// <summary>
 /// An Euclidean plane where a Voronoi diagram can be constructed from <see cref="VoronoiCell"/>s

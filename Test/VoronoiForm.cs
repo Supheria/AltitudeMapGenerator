@@ -1,10 +1,10 @@
-﻿using AtlasGenerator.Layout;
-using AtlasGenerator.VoronoiDiagram;
-using AtlasGenerator.VoronoiDiagram.Data;
+﻿using AltitudeMapGenerator.Layout;
+using AltitudeMapGenerator.VoronoiDiagram;
+using AltitudeMapGenerator.VoronoiDiagram.Data;
 using LocalUtilities.TypeGeneral;
 using System.Drawing.Drawing2D;
 
-namespace AtlasGenerator.Test;
+namespace AltitudeMapGenerator.Test;
 
 /// <summary>
 /// Description of MainForm.
@@ -48,7 +48,7 @@ public partial class VoronoiForm : Form
             var sites = plane.GenerateSites(SegmentNumber);
             Cells = plane.Generate(sites);
         }
-        var river = new AtlasRiver(2.5, size, new(5, 5), RiverLayout.Type.BackwardSlash, Cells.Select(c => c.Site).ToList());
+        var river = new RiverGenerator(2.5, size, new(5, 5), RiverLayout.Type.BackwardSlash, Cells.Select(c => c.Site).ToList());
         g.Clear(Color.White);
         foreach (var c in Cells)
             g.DrawPolygon(Pens.LightGray, c.Vertexes.Select(p => (PointF)p).ToArray());

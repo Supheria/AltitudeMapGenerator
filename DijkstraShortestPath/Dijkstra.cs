@@ -1,7 +1,7 @@
-﻿using AtlasGenerator.VoronoiDiagram;
+﻿using AltitudeMapGenerator.VoronoiDiagram;
 using LocalUtilities.TypeGeneral;
 
-namespace AtlasGenerator.DijkstraShortestPath;
+namespace AltitudeMapGenerator.DijkstraShortestPath;
 
 internal class Dijkstra
 {
