@@ -58,7 +58,7 @@ internal class AltiteudeForm : ResizeableForm
 
     private void GenerateNew_Click(object? sender, EventArgs e)
     {
-        var data = new AltitudeMapData(new(300, 300), new(2, 2), new(6, 6), RiverLayout.Type.BackwardSlash, 2.25, 50000, 0.66f);
+        var data = new AltitudeMapData(new(300, 300), new(2, 2), new(6, 6), RiverLayout.Types.BackwardSlash, 2.25, 50000, 0.66f);
         Atlas = new(data);
         Atlas.SaveToSimpleScript(false);
         MakeMap();

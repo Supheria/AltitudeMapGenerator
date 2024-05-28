@@ -46,7 +46,7 @@ internal class RiverGenerator
     /// </summary>
     internal bool Successful { get; private set; } = true;
 
-    internal RiverGenerator(double width, Size size, Size segmentNumber, RiverLayout.Type riverLayoutType, List<Coordinate> existedSites)
+    internal RiverGenerator(double width, Size size, Size segmentNumber, RiverLayout.Types riverLayoutType, List<Coordinate> existedSites)
     {
         Width = width;
         RiverLayout = riverLayoutType.Parse()(size);

@@ -2,7 +2,7 @@
 
 namespace AltitudeMapGenerator;
 
-public class AltitudeMapData(Size size, Size segmentNumber, Size riverSegmentNumber, RiverLayout.Type riverLayoutType, double riverWidth, int pixelNumber, float pixelDensity)
+public class AltitudeMapData(Size size, Size segmentNumber, Size riverSegmentNumber, RiverLayout.Types riverLayoutType, double riverWidth, int pixelNumber, float pixelDensity)
 {
     public Size Size { get; set; } = size;
 
@@ -12,7 +12,7 @@ public class AltitudeMapData(Size size, Size segmentNumber, Size riverSegmentNum
 
     public double RiverWidth { get; set; } = riverWidth;
 
-    public RiverLayout.Type RiverLayoutType { get; set; } = riverLayoutType;
+    public RiverLayout.Types RiverLayoutType { get; set; } = riverLayoutType;
 
     public int PixelNumber { get; set; } = pixelNumber;
 

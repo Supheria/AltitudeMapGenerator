@@ -6,7 +6,7 @@ public class RiverLayout(params (RiverEndnode Start, RiverEndnode Finish)[] endn
 
     public List<(RiverEndnode Start, RiverEndnode Finish)> Layout { get; } = endnodePairs.ToList();
 
-    public enum Type
+    public enum Types
     {
         Horizontal,
         Vertical,

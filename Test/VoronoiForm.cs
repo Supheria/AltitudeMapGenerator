@@ -48,7 +48,7 @@ public partial class VoronoiForm : Form
             var sites = plane.GenerateSites(SegmentNumber);
             Cells = plane.Generate(sites);
         }
-        var river = new RiverGenerator(2.5, size, new(5, 5), RiverLayout.Type.BackwardSlash, Cells.Select(c => c.Site).ToList());
+        var river = new RiverGenerator(2.5, size, new(5, 5), RiverLayout.Types.BackwardSlash, Cells.Select(c => c.Site).ToList());
         g.Clear(Color.White);
         foreach (var c in Cells)
             g.DrawPolygon(Pens.LightGray, c.Vertexes.Select(p => (PointF)p).ToArray());
