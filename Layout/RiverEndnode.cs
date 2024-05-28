@@ -4,16 +4,16 @@ using LocalUtilities.TypeToolKit.Mathematic;
 
 namespace AltitudeMapGenerator.Layout;
 
-public class RiverEndnode(Direction direction, OperatorType operatorType, Size size)
+public class RiverEndnode(Directions direction, OperatorType operatorType, Size size)
 {
-    internal Direction Direction { get; } = direction;
+    internal Directions Direction { get; } = direction;
 
     internal OperatorType OperatorType { get; } = operatorType;
 
     internal double CompareValue { get; } = direction switch
     {
-        Direction.Left or Direction.Right => size.Height / 2d,
-        Direction.Top or Direction.Bottom => size.Width / 2d,
+        Directions.Left or Directions.Right => size.Height / 2d,
+        Directions.Top or Directions.Bottom => size.Width / 2d,
         _ => throw AltitudeMapGeneratorException.NotProperRiverEndnodeDirection(direction)
     };
 
@@ -23,8 +23,8 @@ public class RiverEndnode(Direction direction, OperatorType operatorType, Size s
             return false;
         var value = Direction switch
         {
-            Direction.Left or Direction.Right => vertex.Y,
-            Direction.Top or Direction.Bottom => vertex.X,
+            Directions.Left or Directions.Right => vertex.Y,
+            Directions.Top or Directions.Bottom => vertex.X,
             _ => throw AltitudeMapGeneratorException.NotProperRiverEndnodeDirection(Direction)
         };
         return value.ApproxOperatorTo(OperatorType, CompareValue);

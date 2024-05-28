@@ -35,7 +35,7 @@ internal class VoronoiCell(Coordinate coordinate)
             if (_vertices == null)
             {
                 _vertices = [];
-                var vertices = new Dictionary<(double X, double Y), Direction>();
+                var vertices = new Dictionary<(double X, double Y), Directions>();
                 foreach (var edge in Edges)
                 {
                     ArgumentNullException.ThrowIfNull(edge.Ender);
@@ -57,7 +57,7 @@ internal class VoronoiCell(Coordinate coordinate)
     }
     Coordinate? _centroid = null;
 
-    internal Direction DirectionOnBorder
+    internal Directions DirectionOnBorder
     {
         get
         {
@@ -67,37 +67,37 @@ internal class VoronoiCell(Coordinate coordinate)
                 {
                     switch (v.DirectionOnBorder)
                     {
-                        case Direction.LeftTop:
-                            _directionOnBorder = Direction.LeftTop;
+                        case Directions.LeftTop:
+                            _directionOnBorder = Directions.LeftTop;
                             return _directionOnBorder.Value;
-                        case Direction.TopRight:
-                            _directionOnBorder = Direction.TopRight;
+                        case Directions.TopRight:
+                            _directionOnBorder = Directions.TopRight;
                             return _directionOnBorder.Value;
-                        case Direction.LeftBottom:
-                            _directionOnBorder = Direction.LeftBottom;
+                        case Directions.LeftBottom:
+                            _directionOnBorder = Directions.LeftBottom;
                             return _directionOnBorder.Value;
-                        case Direction.BottomRight:
-                            _directionOnBorder = Direction.BottomRight;
+                        case Directions.BottomRight:
+                            _directionOnBorder = Directions.BottomRight;
                             return _directionOnBorder.Value;
-                        case Direction.Left:
-                            _directionOnBorder = Direction.Left;
+                        case Directions.Left:
+                            _directionOnBorder = Directions.Left;
                             continue;
-                        case Direction.Top:
-                            _directionOnBorder = Direction.Top;
+                        case Directions.Top:
+                            _directionOnBorder = Directions.Top;
                             continue;
-                        case Direction.Right:
-                            _directionOnBorder = Direction.Right;
+                        case Directions.Right:
+                            _directionOnBorder = Directions.Right;
                             continue;
-                        case Direction.Bottom:
-                            _directionOnBorder = Direction.Bottom;
+                        case Directions.Bottom:
+                            _directionOnBorder = Directions.Bottom;
                             continue;
                     }
                 }
             }
-            return _directionOnBorder ??= Direction.None;
+            return _directionOnBorder ??= Directions.None;
         }
     }
-    Direction? _directionOnBorder = null;
+    Directions? _directionOnBorder = null;
 
     internal VoronoiCell() : this(new())
     {

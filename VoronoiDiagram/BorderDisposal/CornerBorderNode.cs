@@ -5,7 +5,7 @@ namespace AltitudeMapGenerator.VoronoiDiagram.BorderDisposal;
 
 internal class CornerBorderNode(VoronoiVertex point) : BorderNode
 {
-    public override Direction BorderLocation { get; } = point.DirectionOnBorder;
+    public override Directions BorderLocation { get; } = point.DirectionOnBorder;
 
     public override VoronoiVertex Vertex { get; } = point;
 

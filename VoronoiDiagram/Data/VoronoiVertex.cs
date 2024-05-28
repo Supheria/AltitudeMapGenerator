@@ -9,7 +9,7 @@ namespace AltitudeMapGenerator.VoronoiDiagram.Data;
 /// These are the <see cref="VoronoiCell.Vertexes"/>.
 /// Also used for some other derived locations.
 /// </summary>
-internal class VoronoiVertex(double x, double y, Direction borderLocation = Direction.None)
+internal class VoronoiVertex(double x, double y, Directions borderLocation = Directions.None)
 {
     internal double X => x;
 
@@ -21,7 +21,7 @@ internal class VoronoiVertex(double x, double y, Direction borderLocation = Dire
     /// <remarks>
     /// Using this would be preferrable to comparing against the X/Y values due to possible precision issues.
     /// </remarks>
-    internal Direction DirectionOnBorder { get; set; } = borderLocation;
+    internal Directions DirectionOnBorder { get; set; } = borderLocation;
 
     internal double AngleTo(VoronoiVertex other)
     {

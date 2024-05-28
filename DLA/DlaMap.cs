@@ -111,50 +111,50 @@ internal class DlaMap(VoronoiCell cell)
             return false;
         if (PixelMap.TryGetValue(new(left, Y), out var stucked))
         {
-            pixel.Neighbor[Direction.Left] = new(left, Y);
-            stucked.Neighbor[Direction.Right] = new(X, Y);
+            pixel.Neighbor[Directions.Left] = new(left, Y);
+            stucked.Neighbor[Directions.Right] = new(X, Y);
             isStucked = true;
         }
         if (PixelMap.TryGetValue(new(right, Y), out stucked))
         {
-            pixel.Neighbor[Direction.Right] = new(right, Y);
-            stucked.Neighbor[Direction.Left] = new(X, Y);
+            pixel.Neighbor[Directions.Right] = new(right, Y);
+            stucked.Neighbor[Directions.Left] = new(X, Y);
             isStucked = true;
         }
         if (PixelMap.TryGetValue(new(X, top), out stucked))
         {
-            pixel.Neighbor[Direction.Top] = new(X, top);
-            stucked.Neighbor[Direction.Bottom] = new(X, Y);
+            pixel.Neighbor[Directions.Top] = new(X, top);
+            stucked.Neighbor[Directions.Bottom] = new(X, Y);
             isStucked = true;
         }
         if (PixelMap.TryGetValue(new(X, bottom), out stucked))
         {
-            pixel.Neighbor[Direction.Bottom] = new(X, bottom);
-            stucked.Neighbor[Direction.Top] = new(X, Y);
+            pixel.Neighbor[Directions.Bottom] = new(X, bottom);
+            stucked.Neighbor[Directions.Top] = new(X, Y);
             isStucked = true;
         }
         if (PixelMap.TryGetValue(new(left, top), out stucked))
         {
-            pixel.Neighbor[Direction.LeftTop] = new(left, top);
-            stucked.Neighbor[Direction.BottomRight] = new(X, Y);
+            pixel.Neighbor[Directions.LeftTop] = new(left, top);
+            stucked.Neighbor[Directions.BottomRight] = new(X, Y);
             isStucked = true;
         }
         if (PixelMap.TryGetValue(new(left, bottom), out stucked))
         {
-            pixel.Neighbor[Direction.LeftBottom] = new(left, bottom);
-            stucked.Neighbor[Direction.TopRight] = new(X, Y);
+            pixel.Neighbor[Directions.LeftBottom] = new(left, bottom);
+            stucked.Neighbor[Directions.TopRight] = new(X, Y);
             isStucked = true;
         }
         if (PixelMap.TryGetValue(new(right, top), out stucked))
         {
-            pixel.Neighbor[Direction.TopRight] = new(right, top);
-            stucked.Neighbor[Direction.LeftBottom] = new(X, Y);
+            pixel.Neighbor[Directions.TopRight] = new(right, top);
+            stucked.Neighbor[Directions.LeftBottom] = new(X, Y);
             isStucked = true;
         }
         if (PixelMap.TryGetValue(new(right, bottom), out stucked))
         {
-            pixel.Neighbor[Direction.BottomRight] = new(right, bottom);
-            stucked.Neighbor[Direction.LeftTop] = new(X, Y);
+            pixel.Neighbor[Directions.BottomRight] = new(right, bottom);
+            stucked.Neighbor[Directions.LeftTop] = new(X, Y);
             isStucked = true;
         }
         return isStucked;
@@ -169,19 +169,19 @@ internal class DlaMap(VoronoiCell cell)
         foreach (var pair in PixelMap)
         {
             var pixel = pair.Value;
-            CheckDirection(Direction.Left, pixel);
-            CheckDirection(Direction.Top, pixel);
-            CheckDirection(Direction.Right, pixel);
-            CheckDirection(Direction.Bottom, pixel);
-            CheckDirection(Direction.LeftTop, pixel);
-            CheckDirection(Direction.TopRight, pixel);
-            CheckDirection(Direction.LeftBottom, pixel);
-            CheckDirection(Direction.BottomRight, pixel);
+            CheckDirection(Directions.Left, pixel);
+            CheckDirection(Directions.Top, pixel);
+            CheckDirection(Directions.Right, pixel);
+            CheckDirection(Directions.Bottom, pixel);
+            CheckDirection(Directions.LeftTop, pixel);
+            CheckDirection(Directions.TopRight, pixel);
+            CheckDirection(Directions.LeftBottom, pixel);
+            CheckDirection(Directions.BottomRight, pixel);
             AltitudeMax = Math.Max(AltitudeMax, pixel.Altitude);
         }
     }
 
-    private int CheckDirection(Direction direction, DlaPixel walker)
+    private int CheckDirection(Directions direction, DlaPixel walker)
     {
         if (!walker.ConnetNumber.ContainsKey(direction))
         {

@@ -9,7 +9,7 @@ public class AltitudeMapGeneratorException(string message) : Exception(message)
         return new($"not a proper type of river layout");
     }
 
-    public static AltitudeMapGeneratorException NotProperRiverEndnodeDirection(Direction direction)
+    public static AltitudeMapGeneratorException NotProperRiverEndnodeDirection(Directions direction)
     {
         return new($"{direction} is not proper to river end node");
     }

@@ -59,7 +59,7 @@ internal class RiverGenerator
             for (int i = 0; i < cell.Vertexes.Count; i++)
             {
                 var vertex = cell.Vertexes[i];
-                if (vertex.DirectionOnBorder is Direction.None)
+                if (vertex.DirectionOnBorder is Directions.None)
                     InnerNodes.Add(vertex);
                 else
                     BorderNodeFilter(vertex);

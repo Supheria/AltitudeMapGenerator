@@ -6,7 +6,7 @@ namespace AltitudeMapGenerator.VoronoiDiagram.BorderDisposal;
 
 internal abstract class BorderNode
 {
-    public abstract Direction BorderLocation { get; }
+    public abstract Directions BorderLocation { get; }
 
     public abstract VoronoiVertex Vertex { get; }
 
@@ -14,7 +14,7 @@ internal abstract class BorderNode
 
     public abstract int FallbackComparisonIndex { get; }
 
-    public int CompareAngleTo(BorderNode node2, Direction pointBorderLocation)
+    public int CompareAngleTo(BorderNode node2, Directions pointBorderLocation)
     {
         // "Normal" Atan2 returns an angle between -π ≤ θ ≤ π as "seen" on the Cartesian plane,
         // that is, starting at the "right" of x axis and increasing counter-clockwise.
@@ -36,37 +36,37 @@ internal abstract class BorderNode
 
         switch (pointBorderLocation)
         {
-            case Direction.Left:
+            case Directions.Left:
                 // Angles are -π/2..π/2
                 // We don't need to adjust to have it in the same directly-comparable range
                 // Smaller angle comes first
                 break;
-            case Direction.Bottom:
+            case Directions.Bottom:
                 // Angles are 0..-π or π
                 // We can swap π to -π
                 // Smaller angle comes first
                 if (angle1.ApproxGreaterThan(0)) angle1 -= 2 * Math.PI;
                 if (angle2.ApproxGreaterThan(0)) angle2 -= 2 * Math.PI;
                 break;
-            case Direction.Right:
+            case Directions.Right:
                 // Angles are π/2..π or -π/2..-π
                 // We can swap <0 to >0
                 // Angles are now π/2..π or 3/2π..π, i.e. π/2..3/2π
                 if (angle1.ApproxLessThan(0)) angle1 += 2 * Math.PI;
                 if (angle2.ApproxLessThan(0)) angle2 += 2 * Math.PI;
                 break;
-            case Direction.Top:
+            case Directions.Top:
                 // Angles are 0..π or -π
                 // We can swap -π to π 
                 // Smaller angle comes first
                 if (angle1.ApproxLessThan(0)) angle1 += 2 * Math.PI;
                 if (angle2.ApproxLessThan(0)) angle2 += 2 * Math.PI;
                 break;
-            case Direction.BottomRight:
-            case Direction.TopRight:
-            case Direction.LeftBottom:
-            case Direction.LeftTop:
-            case Direction.None:
+            case Directions.BottomRight:
+            case Directions.TopRight:
+            case Directions.LeftBottom:
+            case Directions.LeftTop:
+            case Directions.None:
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(pointBorderLocation), pointBorderLocation, null);

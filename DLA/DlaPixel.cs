@@ -8,9 +8,9 @@ internal class DlaPixel(int x, int y)
 
     internal int Y => y;
 
-    internal Dictionary<Direction, Coordinate> Neighbor { get; } = [];
+    internal Dictionary<Directions, Coordinate> Neighbor { get; } = [];
 
-    internal Dictionary<Direction, int> ConnetNumber { get; } = [];
+    internal Dictionary<Directions, int> ConnetNumber { get; } = [];
 
     internal double Altitude
     {
@@ -18,21 +18,21 @@ internal class DlaPixel(int x, int y)
         {
             if (_altitude is -1)
             {
-                if (!ConnetNumber.TryGetValue(Direction.Top, out var top))
+                if (!ConnetNumber.TryGetValue(Directions.Top, out var top))
                     top = 0;
-                if (!ConnetNumber.TryGetValue(Direction.Bottom, out var bottom))
+                if (!ConnetNumber.TryGetValue(Directions.Bottom, out var bottom))
                     bottom = 0;
-                if (!ConnetNumber.TryGetValue(Direction.Left, out var left))
+                if (!ConnetNumber.TryGetValue(Directions.Left, out var left))
                     left = 0;
-                if (!ConnetNumber.TryGetValue(Direction.Right, out var right))
+                if (!ConnetNumber.TryGetValue(Directions.Right, out var right))
                     right = 0;
-                if (!ConnetNumber.TryGetValue(Direction.LeftTop, out var leftTop))
+                if (!ConnetNumber.TryGetValue(Directions.LeftTop, out var leftTop))
                     leftTop = 0;
-                if (!ConnetNumber.TryGetValue(Direction.BottomRight, out var bottomRight))
+                if (!ConnetNumber.TryGetValue(Directions.BottomRight, out var bottomRight))
                     bottomRight = 0;
-                if (!ConnetNumber.TryGetValue(Direction.TopRight, out var topRight))
+                if (!ConnetNumber.TryGetValue(Directions.TopRight, out var topRight))
                     topRight = 0;
-                if (!ConnetNumber.TryGetValue(Direction.LeftBottom, out var leftBottom))
+                if (!ConnetNumber.TryGetValue(Directions.LeftBottom, out var leftBottom))
                     leftBottom = 0;
                 var list = new List<int>()
                 {

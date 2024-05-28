@@ -6,7 +6,7 @@ namespace AltitudeMapGenerator.VoronoiDiagram.BorderDisposal;
 internal class EdgeStartBorderNode(VoronoiEdge edge, int fallbackComparisonIndex) :
         EdgeBorderNode(edge, fallbackComparisonIndex)
 {
-    public override Direction BorderLocation => Edge.Starter.DirectionOnBorder;
+    public override Directions BorderLocation => Edge.Starter.DirectionOnBorder;
 
     public override VoronoiVertex Vertex => Edge.Starter;
 
