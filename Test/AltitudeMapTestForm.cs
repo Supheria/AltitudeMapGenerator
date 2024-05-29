@@ -99,7 +99,7 @@ internal class AltiteudeForm : ResizeableForm
         foreach (var pair in altitudeCount)
         {
             var left = colWidth * i;
-            var height = (pair.Value * heightRatio).ToInt();
+            var height = (pair.Value * heightRatio).ToRoundInt();
             var top = mapHeight - height + 50;
             g.FillRectangle(new SolidBrush(Color.Green), new(left, top, colWidth, height));
             g.DrawString($"{pair.Value}\n{Math.Round(pair.Value / (double)Atlas.AltitudePoints.Count * 100, 2)}%", LabelFontData, new SolidBrush(Color.Red), new RectangleF(left, top - 50, colWidth, 50));

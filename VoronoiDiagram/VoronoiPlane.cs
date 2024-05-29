@@ -43,7 +43,7 @@ internal class VoronoiPlane(Size size)
                 if (excludes.ContainsKey((i, j)))
                     continue;
                 var (X, Y) = GeneratePoint(widthSegment * i, heightSegment * j, widthSegment * (i + 1), heightSegment * (j + 1), 1).First();
-                sites.Add(new(X.ToInt(), Y.ToInt()));
+                sites.Add(new(X.ToRoundInt(), Y.ToRoundInt()));
             }
         }
         sites.AddRange(existedSites);

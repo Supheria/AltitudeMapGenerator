@@ -30,7 +30,7 @@ internal class VoronoiVertex(double x, double y, Directions borderLocation = Dir
 
     public static implicit operator Coordinate(VoronoiVertex vertex)
     {
-        return new(vertex.X.ToInt(), vertex.Y.ToInt());
+        return new(vertex.X.ToRoundInt(), vertex.Y.ToRoundInt());
     }
 
     public static bool operator ==(VoronoiVertex? v1, object? v2)

@@ -255,7 +255,7 @@ internal class VoronoiCell(Coordinate coordinate)
             return Site;
         centroidX /= area;
         centroidY /= area;
-        return new(centroidX.ToInt(), centroidY.ToInt());
+        return new(centroidX.ToRoundInt(), centroidY.ToRoundInt());
     }
 
     internal Rectangle GetBounds()
