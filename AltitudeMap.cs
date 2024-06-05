@@ -2,6 +2,7 @@ using AltitudeMapGenerator.DLA;
 using AltitudeMapGenerator.VoronoiDiagram;
 using LocalUtilities.SimpleScript.Serialization;
 using LocalUtilities.TypeGeneral;
+using LocalUtilities.TypeToolKit.Mathematic;
 
 namespace AltitudeMapGenerator;
 
@@ -60,14 +61,35 @@ public class AltitudeMap : ISsSerializable
         DlaMap.TestForm.Show();
 
         var altitudes = new List<double>();
-        Parallel.ForEach(plane.Generate(sites), (cell) =>
+        var cells = plane.Generate(sites);
+        cells.Sort((x1, x2)=>
         {
-            var dlaMap = new DlaMap(cell);
-            var pixels = dlaMap.Generate((int)(cell.GetArea() / Area * data.PixelNumber), data.PixelDensity);
-            altitudes.Add(dlaMap.AltitudeMax);
-            OriginPoints.Add(cell.Site);
-            AltitudePoints.AddRange(pixels.Select(p => new AltitudePoint(p.X, p.Y, p.Altitude)));
+            var a1 = x1.Area;
+            var a2 = x2.Area;
+            if (a1.ApproxEqualTo(a2)) 
+                return 0;
+            if (a1.ApproxGreaterThan(a2)) 
+                return 1;
+            return -1;
+
         });
+        var tasks = new List<Task>();
+        foreach(var cell in cells)
+        {
+            tasks.Add(new(() =>
+            {
+                var dlaMap = new DlaMap(cell);
+                var pixels = dlaMap.Generate((int)(cell.Area / Area * data.PixelNumber), data.PixelDensity);
+                altitudes.Add(dlaMap.AltitudeMax);
+                OriginPoints.Add(cell.Site);
+                AltitudePoints.AddRange(pixels.Select(p => new AltitudePoint(p.X, p.Y, p.Altitude)));
+            }));
+        }
+        tasks.ForEach(t=>t.Start());
+        //Parallel.ForEach(cells, (cell) =>
+        //{
+            
+        //});
         var pointAltitudeMap = new Dictionary<Coordinate, double>();
         foreach (var point in AltitudePoints)
         {

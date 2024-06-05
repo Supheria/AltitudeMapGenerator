@@ -99,6 +99,25 @@ internal class VoronoiCell(Coordinate coordinate)
     }
     Directions? _directionOnBorder = null;
 
+    public double Area
+    {
+        get
+        {
+            if (_area.ApproxEqualTo(-1))
+            {
+                var count = Vertexes.Count;
+                if (count < 3)
+                    return 0d;
+                double s = Vertexes[0].Y * (Vertexes[count - 1].X - Vertexes[1].X);
+                for (int i = 1; i < count; ++i)
+                    s += Vertexes[i].Y * (Vertexes[i - 1].X - Vertexes[(i + 1) % count].X);
+                _area = Math.Abs(s / 2d);
+            }
+            return _area;
+        }
+    }
+    double _area = -1;
+
     internal VoronoiCell() : this(new())
     {
 
@@ -274,16 +293,5 @@ internal class VoronoiCell(Coordinate coordinate)
             bottom = Math.Max(bottom, point.Y);
         }
         return new((int)left, (int)top, (int)(right - left), (int)(bottom - top));
-    }
-
-    internal double GetArea()
-    {
-        var count = Vertexes.Count;
-        if (count < 3)
-            return 0d;
-        double s = Vertexes[0].Y * (Vertexes[count - 1].X - Vertexes[1].X);
-        for (int i = 1; i < count; ++i)
-            s += Vertexes[i].Y * (Vertexes[i - 1].X - Vertexes[(i + 1) % count].X);
-        return Math.Abs(s / 2d);
     }
 }
