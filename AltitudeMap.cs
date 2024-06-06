@@ -1,8 +1,11 @@
 using AltitudeMapGenerator.DLA;
 using AltitudeMapGenerator.VoronoiDiagram;
+using AltitudeMapGenerator.VoronoiDiagram.Data;
 using LocalUtilities.SimpleScript.Serialization;
 using LocalUtilities.TypeGeneral;
 using LocalUtilities.TypeToolKit.Mathematic;
+using System.ComponentModel;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AltitudeMapGenerator;
 
@@ -57,39 +60,18 @@ public class AltitudeMap : ISsSerializable
         } while (river.Successful is false);
         RiverPoints = river.River.ToList();
 
-        DlaMap.TestForm.Total = data.PixelNumber;
+        DlaMap.TestForm.Reset(data.PixelNumber);
         DlaMap.TestForm.Show();
 
         var altitudes = new List<double>();
-        var cells = plane.Generate(sites);
-        cells.Sort((x1, x2)=>
+        Parallel.ForEach(plane.Generate(sites), (cell) =>
         {
-            var a1 = x1.Area;
-            var a2 = x2.Area;
-            if (a1.ApproxEqualTo(a2)) 
-                return 0;
-            if (a1.ApproxGreaterThan(a2)) 
-                return 1;
-            return -1;
-
+            var dlaMap = new DlaMap(cell);
+            var pixels = dlaMap.Generate((int)(cell.Area / Area * data.PixelNumber), data.PixelDensity);
+            altitudes.Add(dlaMap.AltitudeMax);
+            OriginPoints.Add(cell.Site);
+            AltitudePoints.AddRange(pixels.Select(p => new AltitudePoint(p.X, p.Y, p.Altitude)));
         });
-        var tasks = new List<Task>();
-        foreach(var cell in cells)
-        {
-            tasks.Add(new(() =>
-            {
-                var dlaMap = new DlaMap(cell);
-                var pixels = dlaMap.Generate((int)(cell.Area / Area * data.PixelNumber), data.PixelDensity);
-                altitudes.Add(dlaMap.AltitudeMax);
-                OriginPoints.Add(cell.Site);
-                AltitudePoints.AddRange(pixels.Select(p => new AltitudePoint(p.X, p.Y, p.Altitude)));
-            }));
-        }
-        tasks.ForEach(t=>t.Start());
-        //Parallel.ForEach(cells, (cell) =>
-        //{
-            
-        //});
         var pointAltitudeMap = new Dictionary<Coordinate, double>();
         foreach (var point in AltitudePoints)
         {

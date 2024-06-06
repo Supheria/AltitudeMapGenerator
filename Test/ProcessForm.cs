@@ -9,7 +9,7 @@ public partial class ProcessForm : Form
 {
     public float Total { get; set; } = 0;
 
-    public int Now { get; set; } = 0;
+    int Now { get; set; } = 0;
 
     Label Label { get; } = new()
     {
@@ -17,60 +17,32 @@ public partial class ProcessForm : Form
         Text = "aa"
     };
 
-    BackgroundWorker BackgroundWorker { get; } = new();
-
     public ProcessForm()
     {
-        //CheckForIllegalCrossThreadCalls = false;
         Controls.Add(Label);
     }
 
     private static readonly object locker = new();
 
-    public void Progress(int count)
+    public void Progress()
     {
-        //lock (locker)
+        lock (locker)
         {
-            if (Label.InvokeRequired)
-            {
-                //lock (locker)
-                {
-                    Label.BeginInvoke(new ThreadStart(new Action(() =>
-                    {
-                        lock (locker)
-                        {
-                            //Now++;
-                            Label.Text = Math.Round(++Now / Total * 100, 2).ToString();
-                        }
-                    })));
-                }
-            }
+            if (InvokeRequired)
+                BeginInvoke(progress);
             else
-            {
-                //lock(locker)
-                {
-                    //Now++;
-                    new ThreadStart(new Action(() =>
-                    {
-                        //Now++;
-                        lock (locker)
-                        {
-                            Label.Text = Math.Round(++Now / Total * 100, 2).ToString();
-                        }
-                    })).Invoke();
-                }
-            }
+                Invoke(progress);
         }
+        void progress()
+        {
+            Label.Text = Math.Round(++Now / Total * 100, 2).ToString();
+            Update();
+        };
     }
 
-    private void BackgroundWorker_DoWork(object? sender, DoWorkEventArgs e)
+    public void Reset(int total)
     {
-        Now++;
-        Label.Text = Math.Round(Now / Total * 100, 2).ToString();
-    }
-
-    private void BackgroundWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
-    {
-        //Label.Text = Math.Round(Now / Total * 100, 2).ToString();
+        Total = total;
+        Now = 0;
     }
 }

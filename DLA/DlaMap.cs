@@ -36,21 +36,15 @@ internal class DlaMap(VoronoiCell cell)
         {
             var pixel = AddWalker(innerFilter);
             PixelMap[pixel] = pixel;
-            //TestForm.Now++;
-            //Now++;
-            TestForm.Progress(1);
+            TestForm.Progress();
         }
-        //TestForm.Progress(PixelMap.Count);
         bool outerFilter(int x, int y) => Bounds.Contains(x, y);
         for (int i = 0; PixelMap.Count < pixelCount; i++)
         {
             var pixel = AddWalker(outerFilter);
             PixelMap[pixel] = pixel;
-            //TestForm.Now++;
-            //Now++;
-            TestForm.Progress(1);
+            TestForm.Progress();
         }
-        //TestForm.Progress(PixelMap.Count);
         ComputeHeight();
         return PixelMap.Values.ToList();
     }
