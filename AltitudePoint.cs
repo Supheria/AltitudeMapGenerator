@@ -18,10 +18,13 @@ public class AltitudePoint(int x, int y, double altitude)
 
     public static AltitudePoint Parse(string str)
     {
-        var list = str.ToArray();
-        if (list.Length is 3)
-            return new(int.Parse(list[0]), int.Parse(list[1]), double.Parse(list[2]));
-        throw TypeConvertException.CannotConvertStringTo<AltitudePoint>();
+        var array = str.ToArray();
+        if (array.Length is not 3 ||
+            !int.TryParse(array[0], out var x) ||
+            !int.TryParse(array[1], out var y) ||
+            !int.TryParse(array[2], out var altitude))
+            return new(0, 0, 0);
+        return new(x, y, altitude);
     }
 
     public static implicit operator Coordinate(AltitudePoint point)
