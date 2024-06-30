@@ -1,12 +1,15 @@
-﻿using LocalUtilities.TypeToolKit.Mathematic;
+﻿using LocalUtilities.TypeGeneral;
+using LocalUtilities.TypeToolKit.Mathematic;
 using System.ComponentModel;
 using System.Net.Sockets;
 using System.Windows.Forms;
 
 namespace AltitudeMapGenerator.Test;
 
-public partial class ProcessForm : Form
+public partial class ProcessForm : ResizeableForm
 {
+    public override string LocalName => nameof(ProcessForm);
+
     public float Total { get; set; } = 0;
 
     int Now { get; set; } = 0;
@@ -22,22 +25,13 @@ public partial class ProcessForm : Form
         Controls.Add(Label);
     }
 
-    private static readonly object locker = new();
-
     public void Progress()
     {
-        lock (locker)
-        {
-            if (InvokeRequired)
-                BeginInvoke(progress);
-            else
-                Invoke(progress);
-        }
-        void progress()
+        InvokeAsync(() =>
         {
             Label.Text = Math.Round(++Now / Total * 100, 2).ToString();
             Update();
-        };
+        });
     }
 
     public void Reset(int total)
